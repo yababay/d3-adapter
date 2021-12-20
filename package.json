@@ -1,6 +1,6 @@
 {
-  "name": "@yababay/d3-adapter",
-  "version": "0.9.1",
+  "name": "@yababay67/d3-adapter",
+  "version": "0.9.2",
   "description": "D3 chart templates",
   "main": "index.ts",
   "scripts": {

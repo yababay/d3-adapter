@@ -1,0 +1,27 @@
+a.link-secondary(
+    id="toc-show"
+    type="button" 
+    data-bs-toggle="offcanvas" 
+    data-bs-target="#toc-offcanvas" 
+    aria-controls="toc-offcanvas")= ( tocToggle || "Показать список материалов")
+
+aside.offcanvas.offcanvas-start(
+    data-bs-scroll="true" 
+    data-bs-backdrop="false" 
+    tabindex="-1" 
+    id="toc-offcanvas" 
+    aria-labelledby="toc-offcanvas-label")
+
+    .offcanvas-header
+        h5.offcanvas-title(id="toc-offcanvas-label")= (tocHeader || "Список материалов:")
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    .offcanvas-body
+        each section in asideLinks
+            a.d-flex.align-items-center.mb-3.mt-3.mb-md-0.me-md-auto.text-decoration-none.link-dark(href=section.link)
+                span.fs-5= section.title 
+            ul.nav.nav-pills.flex-column.mb-auto
+
+article
+    section.container
+        include:markdown-it(html) ../../../docs/content/welcome.md
+

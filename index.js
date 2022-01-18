@@ -1,7 +1,7 @@
-import D3Scales from './src/D3Scales.js'
-import D3SvgCanvas from './src/D3SvgCanvas.js';
-import D3LinearChart from './src/D3LinearChart.js';
-import D3BarChart from './src/D3BarChart.js';
+import D3Canvas from './src/components/charts/D3Canvas.js'
+import D3RadialGraph from './src/components/charts/D3RadialGraph.js'
+//import D3LinearChart from './src/components/charts/D3LinearChart.js'
+//import D3BarChart from './src/components/charts/D3BarChart.js'
 
-export { D3SvgCanvas, D3Scales, D3LinearChart, D3BarChart };
+export { D3Canvas, D3RadialGraph };
 

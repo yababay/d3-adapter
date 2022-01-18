@@ -1,0 +1,47 @@
+doctype html
+html(lang="ru")
+    head
+        meta(charset='utf-8')
+        meta(name="description" content=description)
+        meta(name="author" content=author)
+        meta(name='viewport' content='width=device-width,initial-scale=1')
+
+        if withBootstrap
+            link(rel='stylesheet' href='vendors/css/bootstrap.min.css')
+            script(defer src='vendors/js/bootstrap.bundle.min.js')
+
+        if withHMFLayout
+            link(rel='stylesheet' href='pug-modules/header-main-footer.css')
+
+        if mainLayout
+            link(rel='stylesheet' href='pug-modules/' + mainLayout + '.css')
+
+        if withSvelte
+            link(rel='stylesheet' href='build/bundle.css')
+            script(defer src='build/bundle.js')
+
+        if !logo 
+            link(rel='icon' type='image/svg+xml' href='media/logo.svg')
+        else
+            link(rel='icon' type='image/png' href=logo)
+
+        if withIndexCss
+            link(rel='stylesheet' href='css/index.css')
+
+        title= title
+
+    body
+        header
+            if headerLayout == 'brand-and-end-icons'
+                include headers/brand-and-end-icons
+        main
+            if mainLayout == 'aside-and-article'
+                include main/aside-and-article
+
+            if mainLayout == 'offcanvas-and-article'
+                include main/offcanvas-and-article
+
+        footer
+            if footerLayout == 'simple-copyright'
+                include footers/simple-copyright
+

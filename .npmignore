@@ -1,0 +1,11 @@
+/docs/
+/scripts/
+/src/index.js
+/src/settings.json
+/src/pages/
+/src/pug_modules/
+/src/util/
+/src/components/iconified-links/
+/src/components/AsideLinks.svelte
+/src/components/NavbarIcons.svelte
+/rollup.config.js

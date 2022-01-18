@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Шаблон (template) для проектов на основе svelte с использованием pug.">
+    <meta name="author" content="Михаил Беляков">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="vendors/css/bootstrap.min.css">
+    <script defer src="vendors/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="pug-modules/header-main-footer.css">
+    <link rel="stylesheet" href="pug-modules/offcanvas-and-article.css">
+    <link rel="stylesheet" href="build/bundle.css">
+    <script defer src="build/bundle.js"></script>
+    <link rel="icon" type="image/svg+xml" href="media/logo.svg">
+    <link rel="stylesheet" href="css/index.css">
+    <title>Привет, мир!</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-dark bg-dark shadow"><a class="navbar-brand ms-3" href="/"><img class="me-2" src="media/logo.svg" alt="logo" width="32" height="32"><span>Привет, мир!</span></a>
+        <ul class="nav navbar-nav me-3 flex-row"></ul>
+      </nav>
+    </header>
+    <main><a class="link-secondary" id="toc-show" type="button" data-bs-toggle="offcanvas" data-bs-target="#toc-offcanvas" aria-controls="toc-offcanvas">Показать список графиков</a>
+      <aside class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="toc-offcanvas" aria-labelledby="toc-offcanvas-label">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="toc-offcanvas-label">Список графиков:</h5><button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body"><a class="d-flex align-items-center mb-3 mt-3 mb-md-0 me-md-auto text-decoration-none link-dark" href="#circular"><span class="fs-5">Круговые</span></a>
+          <ul class="nav nav-pills flex-column mb-auto"></ul>
+        </div>
+      </aside>
+      <article>
+        <section class="container"><h1>Hello, World!</h1>
+
+        </section>
+      </article>
+    </main>
+    <footer>
+      <div class="bg-light text-center w-100">
+        &copy;
+        &nbsp;<span>Михаил Беляков</span>,&nbsp;<span>2022</span>
+      </div>
+    </footer>
+  </body>
+</html>

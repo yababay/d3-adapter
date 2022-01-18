@@ -1,0 +1,37 @@
+{
+    "author": "Михаил Беляков",
+    "title":  "Привет, мир!",
+    "brand":  "Привет, мир!",
+    "description": "Шаблон (template) для проектов на основе svelte с использованием pug.",
+    "homeLink": "/",
+
+    "navbarIcons": [
+        {"icon": "community", "link": "#community"},
+        {"icon": "github", "link": "https://github.com/yababay/svelte-meets-yababay"}
+    ],
+
+    "tocToggle": "Показать список графиков",
+    "tocHeader": "Список графиков:",
+
+    "asideLinks": [
+        {
+            "title": "Круговые", 
+            "link": "#circular",
+            "links": [
+                {"link": "#/api/radial-graph",  "title": "Простой круговой график", "icon": "book"}
+            ]
+        }
+    ],
+
+    "withBootstrap":   true,
+    "withSvelte":      true,
+    "withHashRouting": true,
+    "withHMFLayout":   true,
+    "withIndexCss":    true,
+
+    "headerLayout":   "brand-and-end-icons",
+    "mainLayout":     "offcanvas-and-article",
+    "footerLayout":   "simple-copyright",
+
+    "copyright": true
+}

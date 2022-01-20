@@ -131,11 +131,21 @@ class D3Canvas {
     }
 
     /**
+     * Преобразование данных в требуемый формат. Лучше делать это вне данного класса, но если очень нужно - можно переопределить этот метод.
+     * @param {string} - данные для отображения на графике.
+     */ 
+
+    setupData(data){
+        return data
+    }
+
+    /**
      * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
      * @param {string} - данные для отображения на графике.
      */ 
     draw(data){
         const {d3, g, width, height} = this.space
+        data = this.setupData(data)
         this.setupDomains(data, width, height)
         this.setupAxes(data, width, height)
         this.adjust(d3, g, width, height, data)

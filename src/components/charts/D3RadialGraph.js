@@ -69,7 +69,8 @@ class D3RadialGraph extends D3Canvas  {
             .attr("class", "radarArea")
             .attr("d", radarLine)
             .style('fill', 'none')
-            .style('stroke', 'black')
+            .style('stroke', 'steelblue')
+            .style("stroke-width", "2px")
             .attr('transform', `translate(${width / 2},${height / 2})`)
     }
 }

@@ -83429,7 +83429,7 @@
       return zoom;
     }
 
-    var d3$1 = /*#__PURE__*/Object.freeze({
+    var d3$2 = /*#__PURE__*/Object.freeze({
         __proto__: null,
         bisect: bisect,
         bisectRight: bisectRight,
@@ -84006,7 +84006,7 @@
 
     class D3Canvas {
 
-        static d3 = d3$1
+        static d3 = d3$2
 
         /**
          * Конструктор для создания svg-пространства с полями. Обратите внимание, что высота указывается перед шириной, т.к. чаще может возникнуть потребность в ее изменении. Ширина по умолчанию 100% от родительского элемента, что приемлемо в большинстве случаев.
@@ -84098,7 +84098,7 @@
         get space(){
             const g = this.graphics;
             const {width, height} = this.dimensions;
-            return {d3: d3$1, g, width, height}
+            return {d3: d3$2, g, width, height}
         }
 
         /**
@@ -84130,11 +84130,21 @@
         }
 
         /**
+         * Преобразование данных в требуемый формат. Лучше делать это вне данного класса, но если очень нужно - можно переопределить этот метод.
+         * @param {string} - данные для отображения на графике.
+         */ 
+
+        setupData(data){
+            return data
+        }
+
+        /**
          * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
          * @param {string} - данные для отображения на графике.
          */ 
         draw(data){
             const {d3, g, width, height} = this.space;
+            data = this.setupData(data);
             this.setupDomains(data, width, height);
             this.setupAxes(data, width, height);
             this.adjust(d3, g, width, height, data);
@@ -84208,22 +84218,24 @@
                 .attr("class", "radarArea")
                 .attr("d", radarLine)
                 .style('fill', 'none')
-                .style('stroke', 'black')
+                .style('stroke', 'steelblue')
+                .style("stroke-width", "2px")
                 .attr('transform', `translate(${width / 2},${height / 2})`);
         }
     }
 
-    const d3 = D3Canvas.d3;
+    const d3$1 = D3Canvas.d3;
 
     class D3SimpleLinearChart extends D3Canvas {
 
         constructor(figure, height, width){
             super(figure, height, width);
-            this._scaleX = d3.scaleLinear;
-            this._scaleY = d3.scaleLinear;
-            this._axisX = d3.axisBottom;
-            this._axisY = d3.axisLeft;
-            this._offset = .1;
+            this._scaleX = d3$1.scaleLinear;
+            this._scaleY = d3$1.scaleLinear;
+            this._axisX = d3$1.axisBottom;
+            this._axisY = d3$1.axisLeft;
+            this._offsetTop = .1;
+            this._offsetBottom = .1;
             this.marginLeft = 40;
             this.marginBottom = 20;
         }
@@ -84250,16 +84262,25 @@
             this.setDefaultYAxis();
         }
 
-        setupDomains(data, width, height){
+        setDefaultXDomain(data, width){
             const rangeX = this._scaleX().range([0, width]);
+            this._x = rangeX.domain([0, data.length - 1]);
+        }
+
+        setDefaultYDomain(data, height){
             const rangeY = this._scaleY().range([height, 0]);
             const min = data.reduce((acc, el) => Math.min(acc, el), Number.MAX_SAFE_INTEGER);
             const max = data.reduce((acc, el) => Math.max(acc, el), Number.MIN_SAFE_INTEGER);
-            this._x = rangeX.domain([0, data.length - 1]);
-            this._y = rangeY.domain([min * (1 - this._offset), max * (1 + this._offset)]);
+            this._y = rangeY.domain([min * (1 - this._offsetBottom), max * (1 + this._offsetTop)]);
+        }
+
+        setupDomains(data, width, height){
+            this.setDefaultXDomain(data, width);
+            this.setDefaultYDomain(data, height);
         }
 
         adjust(d3, g, width, height, data){
+            if(!width || !height) return
             const x = this._x;
             const y = this._y;
 
@@ -84268,7 +84289,7 @@
                 .y(v => y(v))
                 .curve(d3.curveCardinal);
 
-            this.graphics.append("path")
+            g.append("path")
                 .data([data])
                 .attr("class", "line")
                 .attr("d", valueLine)
@@ -84278,38 +84299,40 @@
         }
     }
 
-    class D3SimpleBarChart extends D3Canvas {
+    const d3 = D3SimpleLinearChart.d3;
 
-        constructor(figure, data, height, width){
-            super(figure, data, height, width);
-            const d3 = this.d3;
-            this._scaleX = d3.scaleBand;
+    class D3SimpleBarChart extends D3SimpleLinearChart {
+
+        constructor(figure, height, width){
+            super(figure, height, width);
+            this._barPadding = .1;
         }
 
-        setupAxes(data, width, height){
-        }
-
-        setupDomains(data, width, height){
-            if(typeof data[0] == 'number') data = data.map((el, i) => ({value: el, label: `#${i + 1}`}));
-        }
-
-        /*draw(){
-            const d3 = this.d3
-            const g = this._graphics || this.graphics
-            const data = this._data
-            console.log(data)
-            const width = this._width
-            const height = this._height
-            //const x = this.getDefaultXRange().padding(.1)
-            //    .domain(data.map(function(d) { return d.label; }))
-            const x = d3.scaleBand()
-                .range([0, width])
-                .padding(0.1)
-                .domain(data.map(function(d) { return d.label; }))
-            //const y = this.getDefaultYRange()
-            const y = d3.scaleLinear()
+        setDefaultYDomain(data, height){
+            this._y = d3.scaleLinear()
                 .range([height, 0])
-                .domain([0, d3.max(data, function(d) { return d.value; })])
+                .domain([0, d3.max(data, function(d) { return d.value; }) * (1 + this._offsetTop)]);
+        }
+
+        setDefaultXDomain(data, width){
+            this._x = d3.scaleBand()
+                .range([0, width])
+                .padding(this._barPadding)
+                .domain(data.map(function(d) { return d.label; }));
+
+        }
+
+        setupData(data){
+            if(typeof data[0] == 'number') data = data.map((el, i) => ({value: el, label: `#${i + 1}`}));
+            return data
+        }
+
+        adjust(d3, g, width, height, data){
+            console.log(data);
+            if(!d3 || !width || !height) return
+            const x = this._x;
+            const y = this._y;
+
             g.selectAll(".bar")
                 .data(data)
                 .enter().append("rect")
@@ -84317,43 +84340,10 @@
                 .attr("x", function(d) { return x(d.label); })
                 .attr("width", x.bandwidth())
                 .attr("y", function(d) { return y(d.value); })
-                .attr("height", function(d) { return height - y(d.value); });
-            //this.setDefaultAxes()
-            g.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
-            adjust(d3, g, x, y, width, height, data)
+                .attr("height", function(d) { return height - y(d.value); })
+                .style("fill", "steelblue")
+                .style("stroke", "#386890");
         }
-
-        get domainX() {
-            const data = this._data
-            return this.rangeX.padding(.1)
-                .domain(data.map(function(d) { return d.label; }))
-        }
-
-        get domainY() {
-            const data = this._data
-            const d3 = this.d3
-            return this.rangeY
-                .domain([0, d3.max(data, function(d) { return d.value; })])
-        }
-
-
-        adjust(d3, g, x, y, width, height, data){
-            g.selectAll(".bar")
-                .data(data)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", function(d) { return x(d.label); })
-                .attr("width", x.bandwidth())
-                .attr("y", function(d) { return y(d.value); })
-                .attr("height", function(d) { return height - y(d.value); });
-            this.setDefaultAxes()
-            //g.append("g")
-            //    .attr("transform", "translate(0," + height + ")")
-            //    .call(d3.axisBottom(x));
-        }
-        */
     }
 
     function randomData(){

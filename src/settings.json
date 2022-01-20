@@ -38,7 +38,6 @@
     "withCoderdocs":   true,
     "withSvelte":      true,
     "withHashRouting": true,
-    "withHMFLayout":   false,
     "withIndexCss":    true,
     "headerIsFixed":   true,
 

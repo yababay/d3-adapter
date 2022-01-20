@@ -59,10 +59,11 @@ html(lang="ru")
             if mainLayout == 'coderdocs'
                 include main/coderdocs
 
-        footer
-            if footerLayout == 'simple-copyright'
-                include footers/simple-copyright
+        if withFooter
+            footer
+                if footerLayout == 'simple-copyright'
+                    include footers/simple-copyright
 
-            // if footerLayout == 'coderdocs'
-            //     include footers/coderdocs
+                // if footerLayout == 'coderdocs'
+                //     include footers/coderdocs
 

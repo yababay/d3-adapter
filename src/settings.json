@@ -15,23 +15,31 @@
 
     "asideLinks": [
         {
-            "title": "Круговые", 
+            "title": "Примеры", 
             "link": "#circular",
             "links": [
-                {"link": "#/api/radial-graph",  "title": "Простой круговой график", "icon": "book"}
+                {"link": "#/api/chart/radial-graph",  "title": "Простой круговой график", "icon": "chart"}
+            ]
+        },
+        {
+            "title": "Документация", 
+            "link": "#circular",
+            "links": [
+                {"link": "#/api/jsdoc/D3Canvas",  "title": "D3Canvas", "icon": "listing"}
             ]
         }
     ],
 
-    "withBootstrap":   true,
+    "withCoderdocs":   true,
     "withSvelte":      true,
     "withHashRouting": true,
     "withHMFLayout":   true,
     "withIndexCss":    true,
+    "headerIsFixed":   true,
 
     "headerLayout":   "brand-and-end-icons",
-    "mainLayout":     "offcanvas-and-article",
-    "footerLayout":   "simple-copyright",
+    "mainLayout":     "coderdocs",
+    "footerLayout":   "coderdocs",
 
     "copyright": true
 }

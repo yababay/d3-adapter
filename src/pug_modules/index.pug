@@ -9,6 +9,18 @@ html(lang="ru")
         if withBootstrap
             link(rel='stylesheet' href='vendors/css/bootstrap.min.css')
             script(defer src='vendors/js/bootstrap.bundle.min.js')
+            script(defer src='vendors/js/popper.min.js')
+
+        if withCoderdocs
+            script(defer src='vendors/js/bootstrap.bundle.min.js')
+            script(defer src='vendors/js/popper.min.js')
+            script(defer src="vendors/js/smoothscroll.min.js")
+            script(defer src="vendors/js/highlight.min.js")
+            script(defer src="vendors/js/simple-lightbox.min.js")
+            script(defer src="vendors/js/gumshoe.polyfills.min.js")
+            script(defer src="vendors/js/coderdocs.js")
+            link(rel="stylesheet" href="vendors/css/atom-one-dark.min.css")
+            link(rel='stylesheet' href='pug-modules/coderdocs.css')
 
         if withHMFLayout
             link(rel='stylesheet' href='pug-modules/header-main-footer.css')
@@ -31,9 +43,12 @@ html(lang="ru")
         title= title
 
     body
-        header
+        header(class=(headerIsFixed && "fixed-top" || ""))
             if headerLayout == 'brand-and-end-icons'
                 include headers/brand-and-end-icons
+
+            if headerLayout == 'coderdocs'
+                include headers/coderdocs
         main
             if mainLayout == 'aside-and-article'
                 include main/aside-and-article
@@ -41,7 +56,13 @@ html(lang="ru")
             if mainLayout == 'offcanvas-and-article'
                 include main/offcanvas-and-article
 
+            if mainLayout == 'coderdocs'
+                include main/coderdocs
+
         footer
             if footerLayout == 'simple-copyright'
                 include footers/simple-copyright
+
+            // if footerLayout == 'coderdocs'
+            //     include footers/coderdocs
 

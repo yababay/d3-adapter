@@ -5,7 +5,6 @@ const home = 'welcome'
 const articleElement = document.querySelector('article')
 const mainElement = document.querySelector('main')
 const height = mainElement.offsetHeight + 'px'
-console.log(height)
 
 let lastURL = document.URL;
 

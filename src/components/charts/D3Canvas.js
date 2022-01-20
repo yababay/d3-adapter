@@ -4,6 +4,13 @@ class D3Canvas {
 
     static d3 = d3
 
+    /**
+     * Конструктор для создания svg-пространства с полями.
+     * @param {HTMLElement} - html-контейнер, в который будет вписан график
+     * @param {string} - высота контейнера в единицах css; по умолчанию 480px.
+     * @param {string} - ширина контейнера; по умолчанию 100%.
+     */
+
     constructor(figure, height, width) {
         this._margin = { top: 10, right: 10, bottom: 20, left: 20 };
         this._figure = figure
@@ -56,14 +63,16 @@ class D3Canvas {
 
     setupDomains(data, width, height){if(!data || !width || !height) return}
 
+    setupAxes(data, width, height){if(!data || !width || !height) return}
+
     draw(data){
         const {d3, g, width, height} = this.space
+        this.setupAxes(data, width, height)
         this.setupDomains(data, width, height)
         this.adjust(d3, g, width, height, data)
     }
 
-    adjust(d3, g, width, height, data){ // quasi abstract method
-        // draw something here
+    adjust(d3, g, width, height, data){
         return d3 || g || width || height || data // just a stub
     }
 }

@@ -1,26 +1,16 @@
 <script>
-    import { onMount } from 'svelte'
-    import D3RadialGraph from '../components/charts/D3RadialGraph.js'
-
+    import JsdocPage from './JsdocPage.svelte'
+    import ChartPage from './ChartPage.svelte'
+    
     export let link, height
-
-    let figure
-
-    onMount(()=>{
-        const chartType = /.*\/([^\/]+)$/.exec(link)[1]
-        const data = new Array(30).fill(2).map(el => el + Math.random())
-        let Chart = null
-        switch(chartType){
-            case 'radial-graph':
-                Chart = D3RadialGraph
-                break
-            default:
-                throw `Не указан тип графика (${charType}).`
-        }
-        const chart = new Chart(figure, height)
-        chart.draw(data)
-    })
+    const props = {link, height}
 </script>
 
-<figure bind:this={figure}/>
+{#if link.includes('/chart/')}
+    <ChartPage link={link} height={height} />
+{/if}
+
+{#if link.includes('/jsdoc/')}
+    <JsdocPage link={link} />
+{/if}
 

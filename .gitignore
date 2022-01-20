@@ -1,4 +1,8 @@
 /node_modules/
+/docs/content/fonts/
+/docs/content/scripts/
+/docs/content/styles/
+/docs/content/index.html
 
 # Trash
 .tmp/

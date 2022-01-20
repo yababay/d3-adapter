@@ -62996,7 +62996,6 @@
             .replace(closing, '')
             .trim()
             .replace(/^([^\>]+)?\>/, '');
-            console.log(html);
         }
         return html
     }
@@ -84010,30 +84009,53 @@
         static d3 = d3$1
 
         /**
-         * Конструктор для создания svg-пространства с полями.
+         * Конструктор для создания svg-пространства с полями. Обратите внимание, что высота указывается перед шириной, т.к. чаще может возникнуть потребность в ее изменении. Ширина по умолчанию 100% от родительского элемента, что приемлемо в большинстве случаев.
          * @param {HTMLElement} - html-контейнер, в который будет вписан график
          * @param {string} - высота контейнера в единицах css; по умолчанию 480px.
-         * @param {string} - ширина контейнера; по умолчанию 100%.
+         * @param {string} - ширина контейнера в единицах css; по умолчанию 100%.
          */
 
         constructor(figure, height, width) {
-            this._margin = { top: 10, right: 10, bottom: 20, left: 20 };
+            this._margin = { top: 10, right: 10, bottom: 10, left: 10 };
             this._figure = figure;
             figure.style.width = width || '100%';
             figure.style.height = height || '480px';
         }
 
+        /**
+         * Сеттер для отступа сверху.
+         * @param {number} - в пикселях.
+         */ 
         set marginTop(value)    { this._margin.top    = value; }
+
+        /**
+         * Сеттер для отступа справа.
+         * @param {number} - в пикселях.
+         */ 
         set marginRight(value)  { this._margin.right  = value; }
+
+        /**
+         * Сеттер для отступа снизу.
+         * @param {number} - в пикселях.
+         */ 
         set marginBottom(value) { this._margin.bottom = value; }
+
+        /**
+         * Сеттер для отступа слева.
+         * @param {number} - в пикселях.
+         */ 
         set marginLeft(value)   { this._margin.left   = value; }
 
         /**
          * Сеттер для подписи к графику.
-         * @param {string} - подпись к графику в формате html.
+         * @param {string} - подпись к графику, можно в формате html.
          */ 
         set caption(value)      { select(this._figure).append("figcaption").html(value); }
 
+
+        /**
+         * Геттер для svg-пространства (без учета отступов).
+         */ 
         get svg() {
             this._svg = this._svg || select(this._figure).append("svg")
                 .attr("width", this._figure.offsetWidth)
@@ -84041,6 +84063,9 @@
             return this._svg
         }
 
+        /**
+         * Геттер для основного svg-объекта, внутри которого размещается график (svg за вычетом отступов).
+         */ 
         get graphics() {
             const { top, left } = this._margin;
             const { width, height } = this.dimensions;
@@ -84052,6 +84077,9 @@
             return this._graphics
         }
 
+        /**
+         * Геттер, возвращающий ширину и высоту в едином объекте: {width, height}.
+         */ 
         get dimensions() {
             const svg = this._svg || this.svg;
             const { top, right, bottom, left } = this._margin;
@@ -84064,6 +84092,9 @@
             return {width, height}
         }
 
+        /**
+         * Геттер, возвращающий основные объекты графика: {d3, g, width, height}.
+         */ 
         get space(){
             const g = this.graphics;
             const {width, height} = this.dimensions;
@@ -84071,37 +84102,23 @@
         }
 
         /**
-         * Здесь настраиваются домены по данным. Метод следует перезагружать вкаждом классе-наследнике.
+         * Здесь настраиваются домены по данным. Абстрактный метод, следует перезагружать в классах-наследниках.
          * @param {object} - данные для графика;
          * @param {number} - ширина (вычислена заранее)
          * @param {number} - высота (вычислена заранее)
          */ 
-        setupDomains(data, width, height){if(!data || !width || !height) return}
-
+        setupDomains(data, width, height){ throw 'Это абстрактный метод (setupDomains).'}
 
         /**
-         * Здесь настраиваются оси графика. Метод следует перезагружать вкаждом классе-наследнике.
+         * Здесь настраиваются оси графика. Абстрактный метод, следует перезагружать в классах-наследниках.
          * @param {object} - данные для графика;
          * @param {number} - ширина (вычислена заранее)
          * @param {number} - высота (вычислена заранее)
          */ 
-        setupAxes(data, width, height){if(!data || !width || !height) return}
-
-
-        /**
-         * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
-         * @param {string} - подпись к графику в формате html.
-         */ 
-        draw(data){
-            const {d3, g, width, height} = this.space;
-            this.setupAxes(data, width, height);
-            this.setupDomains(data, width, height);
-            this.adjust(d3, g, width, height, data);
-        }
-
+        setupAxes(data, width, height){throw 'Это абстрактный метод (setupAxes).'}
 
         /**
-         * Рисование произвольных графиков. Метод следует перезагружать в классах-наследниках.
+         * Рисование произвольных графиков. Абстрактный метод, следует перезагружать в классах-наследниках.
          * @param {object} - набор библиотек d3;
          * @param {object} - базовый svg-объект, внутри которого рисуется всё остальное;
          * @param {number} - вычисленная ширина;
@@ -84109,11 +84126,20 @@
          * @param {object} - данные для построения графика.
          */ 
         adjust(d3, g, width, height, data){
-            return d3 || g || width || height || data // just a stub
+            throw 'Это абстрактный метод (adjust).'
+        }
+
+        /**
+         * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
+         * @param {string} - данные для отображения на графике.
+         */ 
+        draw(data){
+            const {d3, g, width, height} = this.space;
+            this.setupDomains(data, width, height);
+            this.setupAxes(data, width, height);
+            this.adjust(d3, g, width, height, data);
         }
     }
-
-    const d3 = D3Canvas.d3;
 
     class D3RadialGraph extends D3Canvas  {
         constructor(figure, height, width){
@@ -84125,24 +84151,9 @@
         set dataOffset(value) {this._dataOffset = value;}
         set axesOffset(value) {this._axesOffset = value;}
 
-        setupDomains(data, width, height){
-            const maxValue = data.reduce((acc, el) => Math.max(acc, el), 0);
-            const { length } = data;
-            const radius = (width < height ? width : height) * this._dataOffset / 2;
-            const angleStep = Math.PI * 2 / length;
-            const ratio = radius / maxValue;
-            const points = data.map((el, i) => [angleStep * i, el * ratio]);
-            points.push(points[0]);
-
-            this._radarLine = d3.lineRadial()//(points)
-                .curve(d3.curveCardinal)(points);
-        }
-        
-        adjust(d3, g, width, height, data){
-
-
+        setupAxes(data, width, height){
             const radius = (width < height ? width : height) * this._axesOffset / 2;
-                console.log(radius, new Array(12).fill(0).map((_, i) => [2 * Math.PI * i / 12, i * 30]));
+            const g = this.graphics;
             g.append("g").attr("class", "axisCircle")
                 .append('circle')
                 .attr('r', radius * .95)
@@ -84158,7 +84169,7 @@
                 .append("g")
                 .attr("class", "axis")
                 .attr('transform', `translate(${width / 2},${height / 2})`);
-            //Append the lines
+            
             axes.append("line")
                 .attr("x1", 0)
                 .attr("y1", 0)
@@ -84166,22 +84177,188 @@
                 .attr("y2", function(d){ return radius * Math.sin(d[0] - Math.PI/2); })
                 .style('fill', 'none')
                 .style('stroke', 'silver');
+
             axes.append("text")
                 .attr("class", "legend")
                 .style("font-size", "11px")
                 .attr("text-anchor", "middle")
                 .attr("dy", "0.35em")
-                .attr("x", function(d, i){ return 1.05 * radius * Math.cos(d[0] - Math.PI/2); })
-                .attr("y", function(d, i){ return 1.05 * radius * Math.sin(d[0] - Math.PI/2); })
+                .attr("x", function(d, _){ return 1.05 * radius * Math.cos(d[0] - Math.PI/2); })
+                .attr("y", function(d, _){ return 1.05 * radius * Math.sin(d[0] - Math.PI/2); })
                 .text(function(d){return d[1]});
+        }
+
+        setupDomains(data, width, height){
+            const maxValue = data.reduce((acc, el) => Math.max(acc, el), 0);
+            const { length } = data;
+            const radius = (width < height ? width : height) * this._dataOffset / 2;
+            const angleStep = Math.PI * 2 / length;
+            const ratio = radius / maxValue;
+            const points = data.map((el, i) => [angleStep * i, el * ratio]);
+            points.push(points[0]);
+            this._points = points;
+        }
+        
+        adjust(d3, g, width, height){
+
+            const radarLine = d3.lineRadial()
+                .curve(d3.curveCardinal)(this._points);
 
             g.append('path')
                 .attr("class", "radarArea")
-                .attr("d", this._radarLine)
+                .attr("d", radarLine)
                 .style('fill', 'none')
                 .style('stroke', 'black')
                 .attr('transform', `translate(${width / 2},${height / 2})`);
         }
+    }
+
+    const d3 = D3Canvas.d3;
+
+    class D3SimpleLinearChart extends D3Canvas {
+
+        constructor(figure, height, width){
+            super(figure, height, width);
+            this._scaleX = d3.scaleLinear;
+            this._scaleY = d3.scaleLinear;
+            this._axisX = d3.axisBottom;
+            this._axisY = d3.axisLeft;
+            this._offset = .1;
+            this.marginLeft = 40;
+            this.marginBottom = 20;
+        }
+
+        setDefaultXAxis(height){
+            const axisX = this._axisX; 
+            const x = this._x;
+            const g = this._graphics || this.graphics;
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(axisX(x));
+        }
+
+        setDefaultYAxis(){
+            const axisY = this._axisY; 
+            const y = this._y;
+            const g = this._graphics || this.graphics;
+            g.append("g").call(axisY(y));
+        }
+
+        setupAxes(data, width, height){
+            if(!data || !width) return
+            this.setDefaultXAxis(height);
+            this.setDefaultYAxis();
+        }
+
+        setupDomains(data, width, height){
+            const rangeX = this._scaleX().range([0, width]);
+            const rangeY = this._scaleY().range([height, 0]);
+            const min = data.reduce((acc, el) => Math.min(acc, el), Number.MAX_SAFE_INTEGER);
+            const max = data.reduce((acc, el) => Math.max(acc, el), Number.MIN_SAFE_INTEGER);
+            this._x = rangeX.domain([0, data.length - 1]);
+            this._y = rangeY.domain([min * (1 - this._offset), max * (1 + this._offset)]);
+        }
+
+        adjust(d3, g, width, height, data){
+            const x = this._x;
+            const y = this._y;
+
+            const valueLine = d3.line()
+                .x((_, i) => x(i))
+                .y(v => y(v))
+                .curve(d3.curveCardinal);
+
+            this.graphics.append("path")
+                .data([data])
+                .attr("class", "line")
+                .attr("d", valueLine)
+                .style("fill", "none")
+                .style("stroke", "steelblue")
+                .style("stroke-width", "2px");
+        }
+    }
+
+    class D3SimpleBarChart extends D3Canvas {
+
+        constructor(figure, data, height, width){
+            super(figure, data, height, width);
+            const d3 = this.d3;
+            this._scaleX = d3.scaleBand;
+        }
+
+        setupAxes(data, width, height){
+        }
+
+        setupDomains(data, width, height){
+            if(typeof data[0] == 'number') data = data.map((el, i) => ({value: el, label: `#${i + 1}`}));
+        }
+
+        /*draw(){
+            const d3 = this.d3
+            const g = this._graphics || this.graphics
+            const data = this._data
+            console.log(data)
+            const width = this._width
+            const height = this._height
+            //const x = this.getDefaultXRange().padding(.1)
+            //    .domain(data.map(function(d) { return d.label; }))
+            const x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1)
+                .domain(data.map(function(d) { return d.label; }))
+            //const y = this.getDefaultYRange()
+            const y = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(data, function(d) { return d.value; })])
+            g.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d) { return x(d.label); })
+                .attr("width", x.bandwidth())
+                .attr("y", function(d) { return y(d.value); })
+                .attr("height", function(d) { return height - y(d.value); });
+            //this.setDefaultAxes()
+            g.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+            adjust(d3, g, x, y, width, height, data)
+        }
+
+        get domainX() {
+            const data = this._data
+            return this.rangeX.padding(.1)
+                .domain(data.map(function(d) { return d.label; }))
+        }
+
+        get domainY() {
+            const data = this._data
+            const d3 = this.d3
+            return this.rangeY
+                .domain([0, d3.max(data, function(d) { return d.value; })])
+        }
+
+
+        adjust(d3, g, x, y, width, height, data){
+            g.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d) { return x(d.label); })
+                .attr("width", x.bandwidth())
+                .attr("y", function(d) { return y(d.value); })
+                .attr("height", function(d) { return height - y(d.value); });
+            this.setDefaultAxes()
+            //g.append("g")
+            //    .attr("transform", "translate(0," + height + ")")
+            //    .call(d3.axisBottom(x));
+        }
+        */
+    }
+
+    function randomData(){
+        const length = Math.floor(10 + 20 * Math.random());
+        return new Array(length).fill(1.62).map(el => el + Math.random() * (Math.random() > .5 ? 1 : -1))
     }
 
     /* src/pages/ChartPage.svelte generated by Svelte v3.44.3 */
@@ -84193,7 +84370,7 @@
     	const block = {
     		c: function create() {
     			figure_1 = element("figure");
-    			add_location(figure_1, file$3, 30, 0, 831);
+    			add_location(figure_1, file$3, 32, 0, 976);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -84230,7 +84407,6 @@
 
     	onMount(() => {
     		const chartType = (/.*\/([^\/]+)$/).exec(link)[1];
-    		const data = new Array(30).fill(2).map(el => el + Math.random());
     		let Chart = null;
 
     		switch (chartType) {
@@ -84248,7 +84424,7 @@
     		}
 
     		const chart = new Chart(figure, height);
-    		chart.draw(data);
+    		chart.draw(randomData());
     	});
 
     	const writable_props = ['link', 'height'];
@@ -84272,6 +84448,9 @@
     	$$self.$capture_state = () => ({
     		onMount,
     		D3RadialGraph,
+    		D3SimpleLinearChart,
+    		D3SimpleBarChart,
+    		randomData,
     		link,
     		height,
     		figure

@@ -38,10 +38,10 @@ class D3Canvas {
     static d3 = d3
 
     /**
-     * Конструктор для создания svg-пространства с полями.
+     * Конструктор для создания svg-пространства с полями. Обратите внимание, что высота указывается перед шириной, т.к. чаще может возникнуть потребность в ее изменении. Ширина по умолчанию 100% от родительского элемента, что приемлемо в большинстве случаев.
      * @param {HTMLElement} - html-контейнер, в который будет вписан график
      * @param {string} - высота контейнера в единицах css; по умолчанию 480px.
-     * @param {string} - ширина контейнера; по умолчанию 100%.
+     * @param {string} - ширина контейнера в единицах css; по умолчанию 100%.
      */
 
     constructor(figure, height, width) {
@@ -51,17 +51,40 @@ class D3Canvas {
         figure.style.height = height || '480px'
     }
 
+    /**
+     * Сеттер для отступа сверху.
+     * @param {number} - в пикселях.
+     */ 
     set marginTop(value)    { this._margin.top    = value }
+
+    /**
+     * Сеттер для отступа справа.
+     * @param {number} - в пикселях.
+     */ 
     set marginRight(value)  { this._margin.right  = value }
+
+    /**
+     * Сеттер для отступа снизу.
+     * @param {number} - в пикселях.
+     */ 
     set marginBottom(value) { this._margin.bottom = value }
+
+    /**
+     * Сеттер для отступа слева.
+     * @param {number} - в пикселях.
+     */ 
     set marginLeft(value)   { this._margin.left   = value }
 
     /**
      * Сеттер для подписи к графику.
-     * @param {string} - подпись к графику в формате html.
+     * @param {string} - подпись к графику, можно в формате html.
      */ 
     set caption(value)      { d3.select(this._figure).append("figcaption").html(value) }
 
+
+    /**
+     * Геттер для svg-пространства (без учета отступов).
+     */ 
     get svg() {
         this._svg = this._svg || d3.select(this._figure).append("svg")
             .attr("width", this._figure.offsetWidth)
@@ -69,6 +92,9 @@ class D3Canvas {
         return this._svg
     }
 
+    /**
+     * Геттер для основного svg-объекта, внутри которого размещается график (svg за вычетом отступов).
+     */ 
     get graphics() {
         const { top, left } = this._margin;
         const { width, height } = this.dimensions
@@ -80,6 +106,9 @@ class D3Canvas {
         return this._graphics
     }
 
+    /**
+     * Геттер, возвращающий ширину и высоту в едином объекте: {width, height}.
+     */ 
     get dimensions() {
         const svg = this._svg || this.svg
         const { top, right, bottom, left } = this._margin;
@@ -92,6 +121,9 @@ class D3Canvas {
         return {width, height}
     }
 
+    /**
+     * Геттер, возвращающий основные объекты графика: {d3, g, width, height}.
+     */ 
     get space(){
         const g = this.graphics
         const {width, height} = this.dimensions
@@ -99,37 +131,23 @@ class D3Canvas {
     }
 
     /**
-     * Здесь настраиваются домены по данным. Метод следует перезагружать вкаждом классе-наследнике.
+     * Здесь настраиваются домены по данным. Абстрактный метод, следует перезагружать в классах-наследниках.
      * @param {object} - данные для графика;
      * @param {number} - ширина (вычислена заранее)
      * @param {number} - высота (вычислена заранее)
      */ 
-    setupDomains(data, width, height){if(!data || !width || !height) return}
-
+    setupDomains(data, width, height){ throw 'Это абстрактный метод.'}
 
     /**
-     * Здесь настраиваются оси графика. Метод следует перезагружать вкаждом классе-наследнике.
+     * Здесь настраиваются оси графика. Абстрактный метод, следует перезагружать в классах-наследниках.
      * @param {object} - данные для графика;
      * @param {number} - ширина (вычислена заранее)
      * @param {number} - высота (вычислена заранее)
      */ 
-    setupAxes(data, width, height){if(!data || !width || !height) return}
-
-
-    /**
-     * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
-     * @param {string} - подпись к графику в формате html.
-     */ 
-    draw(data){
-        const {d3, g, width, height} = this.space
-        this.setupAxes(data, width, height)
-        this.setupDomains(data, width, height)
-        this.adjust(d3, g, width, height, data)
-    }
-
+    setupAxes(data, width, height){throw 'Это абстрактный метод.'}
 
     /**
-     * Рисование произвольных графиков. Метод следует перезагружать в классах-наследниках.
+     * Рисование произвольных графиков. Абстрактный метод, следует перезагружать в классах-наследниках.
      * @param {object} - набор библиотек d3;
      * @param {object} - базовый svg-объект, внутри которого рисуется всё остальное;
      * @param {number} - вычисленная ширина;
@@ -137,7 +155,18 @@ class D3Canvas {
      * @param {object} - данные для построения графика.
      */ 
     adjust(d3, g, width, height, data){
-        return d3 || g || width || height || data // just a stub
+        throw 'Это абстрактный метод.'
+    }
+
+    /**
+     * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
+     * @param {string} - данные для отображения на графике.
+     */ 
+    draw(data){
+        const {d3, g, width, height} = this.space
+        this.setupAxes(data, width, height)
+        this.setupDomains(data, width, height)
+        this.adjust(d3, g, width, height, data)
     }
 }
 
@@ -158,7 +187,7 @@ export default D3Canvas
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jan 20 2022 08:10:46 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jan 20 2022 10:03:03 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

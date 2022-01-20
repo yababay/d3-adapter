@@ -1,12 +1,18 @@
-import D3SvgCanvas from './D3SvgCanvas.js'
-import D3Scales from './D3Scales.js'
+import D3Canvas from './D3Canvas.js'
 
-class D3BarChart extends D3SvgCanvas {
+class D3SimpleBarChart extends D3Canvas {
 
     constructor(figure, data, height, width){
         super(figure, data, height, width)
         const d3 = this.d3
         this._scaleX = d3.scaleBand
+    }
+
+    setupAxes(data, width, height){
+    }
+
+    setupDomains(data, width, height){
+        if(typeof data[0] == 'number') data = data.map((el, i) => ({value: el, label: `#${i + 1}`}))
     }
 
     /*draw(){
@@ -39,7 +45,7 @@ class D3BarChart extends D3SvgCanvas {
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
         adjust(d3, g, x, y, width, height, data)
-    }*/
+    }
 
     get domainX() {
         const data = this._data
@@ -69,7 +75,8 @@ class D3BarChart extends D3SvgCanvas {
         //    .attr("transform", "translate(0," + height + ")")
         //    .call(d3.axisBottom(x));
     }
+    */
 }
 
-export default D3BarChart
+export default D3SimpleBarChart
 

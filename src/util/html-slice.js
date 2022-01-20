@@ -9,7 +9,6 @@ export default function htmlSlice(html, tag, inner){
         .replace(closing, '')
         .trim()
         .replace(/^([^\>]+)?\>/, '')
-        console.log(html)
     }
     return html
 }

@@ -1,6 +1,9 @@
 <script>
     import { onMount } from 'svelte'
     import D3RadialGraph from '../components/charts/D3RadialGraph.js'
+    import D3SimpleLinearChart from '../components/charts/D3SimpleLinearChart.js'
+    import D3SimpleBarChart from '../components/charts/D3SimpleBarChart.js'
+    import randomData from '../util/random-data.js'
 
     export let link, height
 
@@ -8,7 +11,6 @@
 
     onMount(()=>{
         const chartType = /.*\/([^\/]+)$/.exec(link)[1]
-        const data = new Array(30).fill(2).map(el => el + Math.random())
         let Chart = null
         switch(chartType){
             case 'radial-graph':
@@ -24,9 +26,9 @@
                 throw `Не указан тип графика (${charType}).`
         }
         const chart = new Chart(figure, height)
-        chart.draw(data)
+        chart.draw(randomData())
     })
 </script>
 
-<figure bind:this={figure}/>
+<figure bind:this={figure} />
 

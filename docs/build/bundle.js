@@ -62991,9 +62991,13 @@
         let m = html.indexOf(starting);    
         let n = html.indexOf(closing) + closing.length;  
         html = html.slice(m, n);
-        if(inner) html = html.replace(starting, '')
+        if(inner){ 
+            html = html.replace(starting, '')
             .replace(closing, '')
-            .replace(/^[^>]+>/, '');
+            .trim()
+            .replace(/^([^\>]+)?\>/, '');
+            console.log(html);
+        }
         return html
     }
 
@@ -63155,7 +63159,7 @@
     		closeOffcanvas();
     		let html = converter.makeHtml(txt);
     		let code = htmlSlice(html, 'pre', true);
-    		code = htmlSlice(html, 'code', true).trim();
+    		code = htmlSlice(code, 'code', true).trim();
     		html = html.replace(/\s+/g, ' ');
     		html = html.replace(/<pre>.*<\/pre>/g, `<div class="wrapped-code">${lib.highlight(code, { language: 'js' }).value}</div>`);
     		return html;
@@ -84189,7 +84193,7 @@
     	const block = {
     		c: function create() {
     			figure_1 = element("figure");
-    			add_location(figure_1, file$3, 24, 0, 637);
+    			add_location(figure_1, file$3, 30, 0, 831);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -84232,6 +84236,12 @@
     		switch (chartType) {
     			case 'radial-graph':
     				Chart = D3RadialGraph;
+    				break;
+    			case 'simple-linear':
+    				Chart = D3SimpleLinearChart;
+    				break;
+    			case 'simple-bar':
+    				Chart = D3SimpleBarChart;
     				break;
     			default:
     				throw `Не указан тип графика (${charType}).`;
@@ -84656,22 +84666,47 @@
     var asideLinks = [
     	{
     		title: "Примеры графиков",
-    		link: "#circular",
+    		link: "#examples",
     		links: [
     			{
     				link: "#/api/chart/radial-graph",
     				title: "Простой круговой",
+    				icon: "chart"
+    			},
+    			{
+    				link: "#/api/chart/simple-linear",
+    				title: "Простой линейный",
+    				icon: "chart"
+    			},
+    			{
+    				link: "#/api/chart/simple-bar",
+    				title: "Простой столбчатый",
     				icon: "chart"
     			}
     		]
     	},
     	{
     		title: "Документация",
-    		link: "#circular",
+    		link: "#documentation",
     		links: [
     			{
     				link: "#/api/jsdoc/D3Canvas",
     				title: "D3Canvas",
+    				icon: "listing"
+    			},
+    			{
+    				link: "#/api/jsdoc/D3RadialGraph",
+    				title: "D3RadialGraph",
+    				icon: "listing"
+    			},
+    			{
+    				link: "#/api/jsdoc/D3SimpleLinearChart",
+    				title: "D3SimpleLinearChart",
+    				icon: "listing"
+    			},
+    			{
+    				link: "#/api/jsdoc/D3SimpleBarChart",
+    				title: "D3SimpleBarChart",
     				icon: "listing"
     			}
     		]

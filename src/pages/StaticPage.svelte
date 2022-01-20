@@ -16,7 +16,7 @@
         closeOffcanvas()
         let html = converter.makeHtml(txt)
         let code = htmlSlice(html, 'pre', true)
-        code = htmlSlice(html, 'code', true).trim()
+        code = htmlSlice(code, 'code', true).trim()
         html = html.replace(/\s+/g, ' ')
         html = html.replace(/<pre>.*<\/pre>/g, `<div class="wrapped-code">${hljs.highlight(code, {language: 'js'}).value}</div>`)
         return html

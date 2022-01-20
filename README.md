@@ -27,7 +27,7 @@ const figure = document.querySelector("figure")
 const chart = new D3SimpleLinearChart(figure)
 
 chart.marginBottom = 30
-chart.caption = 'Это простой <b>линейный</b> график.'
+chart.caption = 'Это простой линейный график.'
 chart.draw([1, 3, 2, 5, 6, 4, 7, 8, 9])
 ```
 

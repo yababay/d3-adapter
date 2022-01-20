@@ -16,16 +16,21 @@
     "asideLinks": [
         {
             "title": "Примеры графиков", 
-            "link": "#circular",
+            "link": "#examples",
             "links": [
-                {"link": "#/api/chart/radial-graph",  "title": "Простой круговой", "icon": "chart"}
+                {"link": "#/api/chart/radial-graph",  "title": "Простой круговой", "icon": "chart"},
+                {"link": "#/api/chart/simple-linear", "title": "Простой линейный", "icon": "chart"},
+                {"link": "#/api/chart/simple-bar",    "title": "Простой столбчатый", "icon": "chart"}
             ]
         },
         {
             "title": "Документация", 
-            "link": "#circular",
+            "link": "#documentation",
             "links": [
-                {"link": "#/api/jsdoc/D3Canvas",  "title": "D3Canvas", "icon": "listing"}
+                {"link": "#/api/jsdoc/D3Canvas",  "title": "D3Canvas", "icon": "listing"},
+                {"link": "#/api/jsdoc/D3RadialGraph",  "title": "D3RadialGraph", "icon": "listing"},
+                {"link": "#/api/jsdoc/D3SimpleLinearChart",  "title": "D3SimpleLinearChart", "icon": "listing"},
+                {"link": "#/api/jsdoc/D3SimpleBarChart",  "title": "D3SimpleBarChart", "icon": "listing"}
             ]
         }
     ],

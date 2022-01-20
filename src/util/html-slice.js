@@ -4,8 +4,12 @@ export default function htmlSlice(html, tag, inner){
     let m = html.indexOf(starting)    
     let n = html.indexOf(closing) + closing.length  
     html = html.slice(m, n)
-    if(inner) html = html.replace(starting, '')
+    if(inner){ 
+        html = html.replace(starting, '')
         .replace(closing, '')
-        .replace(/^[^>]+>/, '')
+        .trim()
+        .replace(/^([^\>]+)?\>/, '')
+        console.log(html)
+    }
     return html
 }

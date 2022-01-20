@@ -14,6 +14,12 @@
             case 'radial-graph':
                 Chart = D3RadialGraph
                 break
+            case 'simple-linear':
+                Chart = D3SimpleLinearChart
+                break
+            case 'simple-bar':
+                Chart = D3SimpleBarChart
+                break
             default:
                 throw `Не указан тип графика (${charType}).`
         }

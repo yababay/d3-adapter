@@ -4,3 +4,34 @@ footer {
 	flex-direction: column;
 	justify-content: center;
 }
+
+article .wrapped-code {
+    background-color: #272822;
+    white-space: pre;
+    padding: 3rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.page-title {
+    margin-bottom: 2rem;
+}
+
+.container-overview {
+    margin-top: 3rem;
+}
+
+.subsection-title{
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.docs-nav .section-items {
+	font-size: 1rem !important;
+}
+
+.docs-content {
+    padding-bottom: 0px !important;
+}

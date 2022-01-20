@@ -15,10 +15,10 @@
 
     "asideLinks": [
         {
-            "title": "Примеры", 
+            "title": "Примеры графиков", 
             "link": "#circular",
             "links": [
-                {"link": "#/api/chart/radial-graph",  "title": "Простой круговой график", "icon": "chart"}
+                {"link": "#/api/chart/radial-graph",  "title": "Простой круговой", "icon": "chart"}
             ]
         },
         {

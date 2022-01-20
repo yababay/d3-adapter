@@ -1,5 +1,7 @@
 <script>
+    import hljs from 'highlight.js';
     import Showdown from 'showdown'
+    import htmlSlice from '../util/html-slice.js'
 
     const converter = new Showdown.Converter()
     const tocClose = document.querySelector('#toc-offcanvas .btn-close')
@@ -12,7 +14,12 @@
         if(res.status != 200) throw "Не удалось загрузить запрашиваемый ресурс."
         const txt = await res.text()
         closeOffcanvas()
-        return converter.makeHtml(txt)
+        let html = converter.makeHtml(txt)
+        let code = htmlSlice(html, 'pre', true)
+        code = htmlSlice(html, 'code', true).trim()
+        html = html.replace(/\s+/g, ' ')
+        html = html.replace(/<pre>.*<\/pre>/g, `<div class="wrapped-code">${hljs.highlight(code, {language: 'js'}).value}</div>`)
+        return html
     }
 
     function closeOffcanvas(){

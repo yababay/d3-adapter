@@ -1,5 +1,10 @@
 import * as d3 from 'd3'
 
+/**
+ * Базовый класс-канва для остальных графиков. Позволяет настроить поля, создать основные объекты.
+ * @class
+ */
+
 class D3Canvas {
 
     static d3 = d3
@@ -23,6 +28,10 @@ class D3Canvas {
     set marginBottom(value) { this._margin.bottom = value }
     set marginLeft(value)   { this._margin.left   = value }
 
+    /**
+     * Сеттер для подписи к графику.
+     * @param {string} - подпись к графику в формате html.
+     */ 
     set caption(value)      { d3.select(this._figure).append("figcaption").html(value) }
 
     get svg() {
@@ -61,10 +70,28 @@ class D3Canvas {
         return {d3: d3, g, width, height}
     }
 
+    /**
+     * Здесь настраиваются домены по данным. Метод следует перезагружать вкаждом классе-наследнике.
+     * @param {object} - данные для графика;
+     * @param {number} - ширина (вычислена заранее)
+     * @param {number} - высота (вычислена заранее)
+     */ 
     setupDomains(data, width, height){if(!data || !width || !height) return}
 
+
+    /**
+     * Здесь настраиваются оси графика. Метод следует перезагружать вкаждом классе-наследнике.
+     * @param {object} - данные для графика;
+     * @param {number} - ширина (вычислена заранее)
+     * @param {number} - высота (вычислена заранее)
+     */ 
     setupAxes(data, width, height){if(!data || !width || !height) return}
 
+
+    /**
+     * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
+     * @param {string} - подпись к графику в формате html.
+     */ 
     draw(data){
         const {d3, g, width, height} = this.space
         this.setupAxes(data, width, height)
@@ -72,6 +99,15 @@ class D3Canvas {
         this.adjust(d3, g, width, height, data)
     }
 
+
+    /**
+     * Рисование произвольных графиков. Метод следует перезагружать в классах-наследниках.
+     * @param {object} - набор библиотек d3;
+     * @param {object} - базовый svg-объект, внутри которого рисуется всё остальное;
+     * @param {number} - вычисленная ширина;
+     * @param {number} - вычисленная высота;
+     * @param {object} - данные для построения графика.
+     */ 
     adjust(d3, g, width, height, data){
         return d3 || g || width || height || data // just a stub
     }

@@ -2,6 +2,10 @@ import D3Canvas from './D3Canvas.js'
 
 const d3 = D3Canvas.d3
 
+/**
+ * Линейный график.
+ * @class
+ */
 class D3SimpleLinearChart extends D3Canvas {
 
     constructor(figure, height, width){

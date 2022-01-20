@@ -2,6 +2,11 @@ import D3Canvas from './D3Canvas'
 
 const d3 = D3Canvas.d3
 
+
+/**
+ * Круговой график.
+ * @class
+ */
 class D3RadialGraph extends D3Canvas  {
     constructor(figure, height, width){
         super(figure, height, width)
@@ -9,7 +14,16 @@ class D3RadialGraph extends D3Canvas  {
         this._axesOffset = .9
     }
 
+
+    /**
+     * Сеттер для отступа графика от внешней границы.
+     */ 
     set dataOffset(value) {this._dataOffset = value}
+
+
+    /**
+     * Сеттер для отступа надписей от внешней границы.
+     */ 
     set axesOffset(value) {this._axesOffset = value}
 
     setupAxes(data, width, height){

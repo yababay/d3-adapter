@@ -84151,6 +84151,10 @@
         }
     }
 
+    /**
+     * Круговой график.
+     * @class
+     */
     class D3RadialGraph extends D3Canvas  {
         constructor(figure, height, width){
             super(figure, height, width);
@@ -84158,7 +84162,16 @@
             this._axesOffset = .9;
         }
 
+
+        /**
+         * Сеттер для отступа графика от внешней границы.
+         */ 
         set dataOffset(value) {this._dataOffset = value;}
+
+
+        /**
+         * Сеттер для отступа надписей от внешней границы.
+         */ 
         set axesOffset(value) {this._axesOffset = value;}
 
         setupAxes(data, width, height){
@@ -84226,6 +84239,10 @@
 
     const d3$1 = D3Canvas.d3;
 
+    /**
+     * Линейный график.
+     * @class
+     */
     class D3SimpleLinearChart extends D3Canvas {
 
         constructor(figure, height, width){
@@ -84301,6 +84318,10 @@
 
     const d3 = D3SimpleLinearChart.d3;
 
+    /**
+     * Столбчатый график.
+     * @class
+     */
     class D3SimpleBarChart extends D3SimpleLinearChart {
 
         constructor(figure, height, width){
@@ -84328,7 +84349,6 @@
         }
 
         adjust(d3, g, width, height, data){
-            console.log(data);
             if(!d3 || !width || !height) return
             const x = this._x;
             const y = this._y;
@@ -84360,7 +84380,7 @@
     	const block = {
     		c: function create() {
     			figure_1 = element("figure");
-    			add_location(figure_1, file$3, 32, 0, 976);
+    			add_location(figure_1, file$3, 37, 0, 1196);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -84398,16 +84418,20 @@
     	onMount(() => {
     		const chartType = (/.*\/([^\/]+)$/).exec(link)[1];
     		let Chart = null;
+    		let caption = null;
 
     		switch (chartType) {
     			case 'radial-graph':
     				Chart = D3RadialGraph;
+    				caption = 'Простой круговой график.';
     				break;
     			case 'simple-linear':
     				Chart = D3SimpleLinearChart;
+    				caption = 'Простой линейный график.';
     				break;
     			case 'simple-bar':
     				Chart = D3SimpleBarChart;
+    				caption = 'Простой столбчатый график.';
     				break;
     			default:
     				throw `Не указан тип графика (${charType}).`;
@@ -84415,6 +84439,7 @@
 
     		const chart = new Chart(figure, height);
     		chart.draw(randomData());
+    		chart.caption = caption;
     	});
 
     	const writable_props = ['link', 'height'];
@@ -84816,9 +84841,9 @@
     }
 
     var author = "Михаил Беляков";
-    var title = "Привет, мир!";
-    var brand = "Привет, мир!";
-    var description = "Шаблон (template) для проектов на основе svelte с использованием pug.";
+    var title = "D3-adapter";
+    var brand = "D3-adapter";
+    var description = "Библиотека для рисования d3-графиков в ООП-стиле.";
     var homeLink = "/";
     var navbarIcons = [
     	{
@@ -84827,7 +84852,7 @@
     	},
     	{
     		icon: "github",
-    		link: "https://github.com/yababay/svelte-meets-yababay"
+    		link: "https://github.com/yababay/d3-adapter"
     	}
     ];
     var tocToggle = "Показать список графиков";
@@ -84884,7 +84909,7 @@
     var withCoderdocs = true;
     var withSvelte = true;
     var withHashRouting = true;
-    var withHMFLayout = true;
+    var withHMFLayout = false;
     var withIndexCss = true;
     var headerIsFixed = true;
     var headerLayout = "brand-and-end-icons";

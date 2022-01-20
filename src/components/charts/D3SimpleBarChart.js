@@ -2,6 +2,10 @@ import D3SimpleLinearChart from './D3SimpleLinearChart.js'
 
 const d3 = D3SimpleLinearChart.d3
 
+/**
+ * Столбчатый график.
+ * @class
+ */
 class D3SimpleBarChart extends D3SimpleLinearChart {
 
     constructor(figure, height, width){
@@ -29,7 +33,6 @@ class D3SimpleBarChart extends D3SimpleLinearChart {
     }
 
     adjust(d3, g, width, height, data){
-        console.log(data)
         if(!d3 || !width || !height) return
         const x = this._x
         const y = this._y

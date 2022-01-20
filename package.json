@@ -1,6 +1,25 @@
 {
-  "name": "svelte-meets-yababay",
-  "version": "0.0.1",
+  "name": "@yababay67/d3-adapter",
+  "version": "1.0.0",
+  "description": "Helps to build d3-charts in a more simple way.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yababay/d3-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yababay/d3-adapter/issues"
+  },
+  "homepage": "https://github.com/yababay/d3-adapter#readme",
+  "keywords": [
+    "d3",
+    "chart"
+  ],
+  "author": "Михаил Беляков (Michael Belyakov)",
+  "license": "MIT",
   "scripts": {
     "pug-src": "node ./scripts/setupPugSrc.js",
     "pug-css": "node ./scripts/setupPugCss.js",
@@ -22,6 +41,7 @@
     "reset": "npm run clean && npm run postinstall",
     "docs": "./node_modules/jsdoc/jsdoc.js -c ./jsdoc.conf.json",
     "readme": "cp README.md docs/content/welcome.md",
+    "preview": "npm pack && rm *.tgz",
     "start": "sirv docs --no-clear"
   },
   "devDependencies": {
@@ -45,10 +65,10 @@
     "rollup-plugin-terser": "^7.0.0",
     "showdown": "^1.9.1",
     "sirv-cli": "^1.0.0",
+    "highlight.js": "^11.4.0",
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "d3": "^7.3.0",
-    "highlight.js": "^11.4.0"
+    "d3": "^7.2.1"
   }
 }

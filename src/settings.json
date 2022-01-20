@@ -1,13 +1,13 @@
 {
     "author": "Михаил Беляков",
-    "title":  "Привет, мир!",
-    "brand":  "Привет, мир!",
-    "description": "Шаблон (template) для проектов на основе svelte с использованием pug.",
+    "title":  "D3-adapter",
+    "brand":  "D3-adapter",
+    "description": "Библиотека для рисования d3-графиков в ООП-стиле.",
     "homeLink": "/",
 
     "navbarIcons": [
         {"icon": "community", "link": "#community"},
-        {"icon": "github", "link": "https://github.com/yababay/svelte-meets-yababay"}
+        {"icon": "github", "link": "https://github.com/yababay/d3-adapter"}
     ],
 
     "tocToggle": "Показать список графиков",
@@ -38,7 +38,7 @@
     "withCoderdocs":   true,
     "withSvelte":      true,
     "withHashRouting": true,
-    "withHMFLayout":   true,
+    "withHMFLayout":   false,
     "withIndexCss":    true,
     "headerIsFixed":   true,
 

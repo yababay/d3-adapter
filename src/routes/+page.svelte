@@ -1,3 +1,13 @@
-<h1>Welcome to your library project</h1>
-<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    import {onMount} from 'svelte'
+    import D3SimpleLinearChart from '$lib/charts/D3SimpleLinearChart.js'
+    let figure: HTMLElement
+    onMount(() => {
+        const chart = new D3SimpleLinearChart(figure)
+        chart.draw([1,2,3,4,6,5,8,7,9])
+    })
+</script>
+
+<main>
+    <figure bind:this={figure}></figure>
+</main>

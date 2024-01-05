@@ -1,0 +1,26 @@
+html, body, header, main, footer {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: block;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+:root {
+    --header-height: 4rem;
+    --footer-height: 4rem;
+    --main-min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+header {height: var(--header-height);}
+main {min-height: var(--main-min-height);}
+footer {height: var(--footer-height);}
+
+header nav {height: 100%;}
+

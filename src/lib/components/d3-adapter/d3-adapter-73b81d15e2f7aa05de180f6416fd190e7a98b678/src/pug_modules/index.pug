@@ -1,0 +1,69 @@
+doctype html
+html(lang="ru")
+    head
+        meta(charset='utf-8')
+        meta(name="description" content=description)
+        meta(name="author" content=author)
+        meta(name='viewport' content='width=device-width,initial-scale=1')
+
+        if withBootstrap
+            link(rel='stylesheet' href='vendors/css/bootstrap.min.css')
+            script(defer src='vendors/js/bootstrap.bundle.min.js')
+            script(defer src='vendors/js/popper.min.js')
+
+        if withCoderdocs
+            link(rel="stylesheet" href="vendors/css/monokai.css")
+            link(rel='stylesheet' href='pug-modules/coderdocs.css')
+            script(defer src='vendors/js/bootstrap.bundle.min.js')
+            script(defer src='vendors/js/popper.min.js')
+            // script(defer src="vendors/js/smoothscroll.min.js")
+            // script(defer src="vendors/js/highlight.min.js")
+            script(defer src="vendors/js/simple-lightbox.min.js")
+            // script(defer src="vendors/js/gumshoe.polyfills.min.js")
+            script(defer src="vendors/js/coderdocs.js")
+
+        if withHMFLayout
+            link(rel='stylesheet' href='pug-modules/header-main-footer.css')
+
+        if mainLayout
+            link(rel='stylesheet' href='pug-modules/' + mainLayout + '.css')
+
+        if withSvelte
+            link(rel='stylesheet' href='build/bundle.css')
+            script(defer src='build/bundle.js')
+
+        if !logo 
+            link(rel='icon' type='image/svg+xml' href='media/logo.svg')
+        else
+            link(rel='icon' type='image/png' href=logo)
+
+        if withIndexCss
+            link(rel='stylesheet' href='css/index.css')
+
+        title= title
+
+    body
+        header(class=(headerIsFixed && "fixed-top" || ""))
+            if headerLayout == 'brand-and-end-icons'
+                include headers/brand-and-end-icons
+
+            if headerLayout == 'coderdocs'
+                include headers/coderdocs
+        main
+            if mainLayout == 'aside-and-article'
+                include main/aside-and-article
+
+            if mainLayout == 'offcanvas-and-article'
+                include main/offcanvas-and-article
+
+            if mainLayout == 'coderdocs'
+                include main/coderdocs
+
+        if withFooter
+            footer
+                if footerLayout == 'simple-copyright'
+                    include footers/simple-copyright
+
+                // if footerLayout == 'coderdocs'
+                //     include footers/coderdocs
+

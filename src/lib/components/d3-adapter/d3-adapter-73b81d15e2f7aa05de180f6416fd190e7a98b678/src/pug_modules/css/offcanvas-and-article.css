@@ -1,0 +1,6 @@
+#toc-show {
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    margin: 0.5rem 0 0 1rem;
+}

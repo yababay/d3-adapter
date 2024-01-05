@@ -1,6 +1,7 @@
 /bin
 /documents
 /obj
+/dist
 
 /.prev
 /.svelte-kit

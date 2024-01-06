@@ -2,6 +2,7 @@
 /documents
 /obj
 /dist
+/static
 
 /.prev
 /.svelte-kit

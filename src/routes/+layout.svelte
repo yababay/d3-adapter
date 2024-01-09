@@ -5,6 +5,7 @@
             <li><a href="/simple-line">линейный график</a></li>
             <li><a href="/simple-with-dates">график с датами</a></li>
             <li><a href="/multiline">график c линиями</a></li>
+            <li><a href="/multiscale">график c 2 шкалами</a></li>
         </ul>
     </div>
     <div class="col-9">

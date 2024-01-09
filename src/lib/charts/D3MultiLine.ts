@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import D3SimpleLinearChart from './D3SimpleLinearChart.js'
+import { tickFormat, timeFormat } from 'd3'
 
 /**
  * Линейный график.
@@ -40,11 +41,13 @@ class D3LinearWithDates extends D3SimpleLinearChart {
         if(!this.#x) throw 'no x'
         const axisX = this.#axisX
         const x = this.#x
-        //axisX(x).tickFormat(d3.timeFormat("%H:%M:%S"))
         const g = this.graphics //|| this.graphics
         g.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(axisX(x));
+            .attr("transform", `translate(0,${height})rotate(-45)`)
+            //.selectAll("text").attr("transform", "translate(-10,15)rotate(-45)"),
+            .call(axisX<Date>(x)
+                .tickFormat(d3.timeFormat("%H:%M:%S")) 
+            );
     }
 
     setDefaultYAxis(){

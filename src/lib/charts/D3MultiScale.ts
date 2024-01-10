@@ -2,6 +2,8 @@ import * as d3 from 'd3'
 import D3SimpleLinearChart from './D3SimpleLinearChart.js'
 import { tickFormat, timeFormat } from 'd3'
 
+type ServerData = [Date | number, number][]
+
 /**
  * Линейный график.
  * @class
@@ -27,31 +29,28 @@ class D3MultiScale extends D3SimpleLinearChart {
 
     setDefaultXDomain(data: any[], width: number){
         const rangeX = this.#scaleX().range([0, width])
-        this.#x = rangeX.domain([data[0][0], data[data.length - 1][0]])
+        if(!this.#dataTemp) throw 'bad thisdatatemp'
+        this.#x = rangeX.domain([this.#dataTemp[0][0], this.#dataTemp[this.#dataTemp.length - 1][0]])
     }
  
     setDefaultYDomain(data: any[], height: number){
         const rangeY = this.#scaleY().range([height, 0])
-
-        //const dataYPress = data.map(([ts, {druck_p01}]) => druck_p01) 
-        //const minPress = dataYPress.reduce((acc, el) => Math.min(acc, el), Number.MAX_SAFE_INTEGER)
-        //const maxPress = dataYPress.reduce((acc, el) => Math.max(acc, el), Number.MIN_SAFE_INTEGER)
         
+        if(!this.#dataTemp) throw 'bad dataTemp'
+        if(!this.#dataPress) throw 'bad dataPress'
 
-        const dataYTemp = data.map(([ts, {temp_t01}]) => temp_t01) 
-        const minTemp = dataYTemp.reduce((acc, el) => Math.min(acc, el), Number.MAX_SAFE_INTEGER)
-        const maxTemp = dataYTemp.reduce((acc, el) => Math.max(acc, el), Number.MIN_SAFE_INTEGER)
+        const getMinMax = (data: ServerData) => {
+            const mapped = data.map(([ts, v]) => v)
+            const min = mapped.reduce((acc, el) => Math.min(acc, el), Number.MAX_SAFE_INTEGER)
+            const max = mapped.reduce((acc, el) => Math.max(acc, el), Number.MIN_SAFE_INTEGER)
+            return [min, max]
+        }
+        console.log(this.#dataPress)
+        console.log(getMinMax(this.#dataTemp))
+        console.log(getMinMax(this.#dataPress))
+        this.#yTemp = rangeY.domain(getMinMax(this.#dataTemp))
+        //this.#yPress = rangeY.domain(getMinMax(this.#dataPress))
 
-        //const min = Math.min(minTemp, minPress)
-
-        //console.log(dataYPress.sort())
-        console.log(dataYTemp.sort())
-
-        //this.#yTemp = rangeY.domain([minTemp * (1 - this.#offsetBottom), maxTemp * (1 + this.#offsetTop)])
-        this.#yTemp = rangeY.domain([minTemp, maxTemp])
-
-        //this.#yPress = rangeY.domain([minPress * (1 - this.#offsetBottom), maxPress * (1 + this.#offsetTop)])
-        //this.#yPress = rangeY.domain([minPress, maxPress])
     }
 
     setDefaultXAxis(height: number){
@@ -68,16 +67,16 @@ class D3MultiScale extends D3SimpleLinearChart {
     }
 
     setDefaultYAxis(){
-        if(!this.#yPress) throw 'no yPress'
+        /*if(!this.#yPress) throw 'no yPress'
         const axisYPress = this.#axisYPress 
         const yPress = this.#yPress
         const g = this.graphics //|| this.graphics
-        g.append("g").call(axisYPress(yPress))
+        g.append("g").call(axisYPress(yPress))*/
 
         if(!this.#yTemp) throw 'no yTemp'
         const axisYTemp = this.#axisYTemp
         const yTemp = this.#yTemp
-        //const g = this.graphics //|| this.graphics
+        const g = this.graphics //|| this.graphics
         g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(500, 0)`)
     }
 
@@ -92,19 +91,26 @@ class D3MultiScale extends D3SimpleLinearChart {
         this.setDefaultYDomain(data, height)
     }
 
+    #dataPress: ServerData | undefined = undefined
+    #dataTemp: ServerData | undefined = undefined
+
     setupData(data: any[]): any[] {
-        return data.map((el) => {
+        this.#dataTemp = data.map(({ts, temp_t01}) => [new Date(ts), temp_t01])
+        this.#dataPress = data.map(({ts, druck_p01}) => [new Date(ts), druck_p01])
+        /*return data.map((el) => {
             if(!(el && typeof el === "object")) throw 'no object'
             const {ts, druck_p01, temp_t01} = el
             if(!(typeof ts === "string" && typeof druck_p01 === "number" && 
                 typeof temp_t01 === "number")) throw 'bad data'
             return [new Date(ts), {druck_p01, temp_t01}]
-        })
+        })*/
+        return data
     }
 
     adjust(g: d3.Selection<SVGGElement, unknown, null, undefined>, width: number, 
         height: number, data: any[]){
     if(!width || !height) throw 'no width height'
+    if(!this.#dataTemp) throw 'no data temp'
     const x = this.#x
     //const yPress = this.#yPress
     const yTemp = this.#yTemp
@@ -131,7 +137,7 @@ class D3MultiScale extends D3SimpleLinearChart {
 
     g.append("path")
         .attr("class", "line")
-        .attr("d", valueLineTemp(data.map(([ts, {temp_t01}]) => [ts, temp_t01])))
+        .attr("d", valueLineTemp(this.#dataTemp.map(([ts, v]) => [ts as number, v as number])))
         .style("fill", "none")
         .style("stroke", "red")
         .style("stroke-width", "2px");

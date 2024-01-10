@@ -34,7 +34,8 @@ class D3MultiScale extends D3SimpleLinearChart {
     }
  
     setDefaultYDomain(data: any[], height: number){
-        const rangeY = this.#scaleY().range([height, 0])
+        const rangeYTemp = this.#scaleY().range([height, 0])
+        const rangeYPress = this.#scaleY().range([height, 0])
         
         if(!this.#dataTemp) throw 'bad dataTemp'
         if(!this.#dataPress) throw 'bad dataPress'
@@ -48,8 +49,8 @@ class D3MultiScale extends D3SimpleLinearChart {
         console.log(this.#dataPress)
         console.log(getMinMax(this.#dataTemp))
         console.log(getMinMax(this.#dataPress))
-        this.#yTemp = rangeY.domain(getMinMax(this.#dataTemp))
-        //this.#yPress = rangeY.domain(getMinMax(this.#dataPress))
+        this.#yTemp = rangeYTemp.domain(getMinMax(this.#dataTemp))
+        this.#yPress = rangeYPress.domain(getMinMax(this.#dataPress))
 
     }
 
@@ -67,16 +68,16 @@ class D3MultiScale extends D3SimpleLinearChart {
     }
 
     setDefaultYAxis(){
-        /*if(!this.#yPress) throw 'no yPress'
+        if(!this.#yPress) throw 'no yPress'
         const axisYPress = this.#axisYPress 
         const yPress = this.#yPress
         const g = this.graphics //|| this.graphics
-        g.append("g").call(axisYPress(yPress))*/
+        g.append("g").call(axisYPress(yPress))
 
         if(!this.#yTemp) throw 'no yTemp'
         const axisYTemp = this.#axisYTemp
         const yTemp = this.#yTemp
-        const g = this.graphics //|| this.graphics
+        //const g = this.graphics //|| this.graphics
         g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(500, 0)`)
     }
 
@@ -111,29 +112,30 @@ class D3MultiScale extends D3SimpleLinearChart {
         height: number, data: any[]){
     if(!width || !height) throw 'no width height'
     if(!this.#dataTemp) throw 'no data temp'
+    if(!this.#dataPress) throw 'no data press'
     const x = this.#x
-    //const yPress = this.#yPress
+    const yPress = this.#yPress
     const yTemp = this.#yTemp
-    if(!(x && yTemp)) throw 'no x y'
+    if(!(x && yPress && yTemp)) throw 'no x y'
 
     //console.log(data)
 
-    /*const valueLinePress = d3.line()
+    const valueLinePress = d3.line()
         .x(([ts]) => x(ts))
         .y(([_, v]) => yPress(v))
-        .curve(d3.curveCardinal)*/
+        .curve(d3.curveCardinal)
 
     const valueLineTemp = d3.line()
         .x(([ts]) => x(ts))
         .y(([_, v]) => yTemp(v))
         .curve(d3.curveCardinal)
 
-    /*g.append("path")
+    g.append("path")
         .attr("class", "line")
-        .attr("d", valueLinePress(data.map(([ts, {druck_p01}]) => [ts, druck_p01])))
+        .attr("d", valueLinePress(this.#dataPress.map(([ts, v]) => [ts as number, v as number])))
         .style("fill", "none")
         .style("stroke", "steelblue")
-        .style("stroke-width", "2px");*/
+        .style("stroke-width", "2px");
 
     g.append("path")
         .attr("class", "line")

@@ -43,7 +43,7 @@ class D3LinearWithDates extends D3SimpleLinearChart {
         const x = this.#x
         const g = this.graphics //|| this.graphics
         g.append("g")
-            .attr("transform", `translate(0,${height})rotate(-45)`)
+            .attr("transform", `translate(0,${height})`)
             //.selectAll("text").attr("transform", "translate(-10,15)rotate(-45)"),
             .call(axisX<Date>(x)
                 .tickFormat(d3.timeFormat("%H:%M:%S")) 

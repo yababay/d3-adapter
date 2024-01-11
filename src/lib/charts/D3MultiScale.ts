@@ -1,6 +1,5 @@
 import * as d3 from 'd3'
 import D3SimpleLinearChart from './D3SimpleLinearChart.js'
-import { tickFormat, timeFormat } from 'd3'
 
 type ServerData = [Date | number, number][]
 
@@ -61,10 +60,8 @@ class D3MultiScale extends D3SimpleLinearChart {
         const g = this.graphics //|| this.graphics
         g.append("g")
             .attr("transform", `translate(0,${height})`)
-            //.selectAll("text").attr("transform", "translate(-10,15)rotate(-45)"),
-            .call(axisX<Date>(x)
-                .tickFormat(d3.timeFormat("%H:%M:%S")) 
-            );
+            .call(axisX<Date>(x).tickFormat(d3.timeFormat("%H:%M:%S")))
+            .selectAll("text").attr("transform", "translate(-10,15)rotate(-45)")
     }
 
     setDefaultYAxis(){
@@ -77,8 +74,7 @@ class D3MultiScale extends D3SimpleLinearChart {
         if(!this.#yTemp) throw 'no yTemp'
         const axisYTemp = this.#axisYTemp
         const yTemp = this.#yTemp
-        //const g = this.graphics //|| this.graphics
-        g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(500, 0)`)
+        g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(950, 0)`)
     }
 
     setupAxes(data: any[], width: number, height: number){
@@ -117,8 +113,6 @@ class D3MultiScale extends D3SimpleLinearChart {
     const yPress = this.#yPress
     const yTemp = this.#yTemp
     if(!(x && yPress && yTemp)) throw 'no x y'
-
-    //console.log(data)
 
     const valueLinePress = d3.line()
         .x(([ts]) => x(ts))

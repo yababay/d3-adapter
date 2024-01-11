@@ -1,0 +1,1 @@
+export type MappedData = any[] | Map<string | Date, {[key: string]: string | number}>

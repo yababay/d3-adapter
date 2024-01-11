@@ -6,6 +6,7 @@
             <li><a href="/simple-with-dates">график с датами</a></li>
             <li><a href="/multiline">график c линиями</a></li>
             <li><a href="/multiscale">график c 2 шкалами</a></li>
+            <li><a href="/mappeddata">данные в формате Map</a></li>
         </ul>
     </div>
     <div class="col-9">

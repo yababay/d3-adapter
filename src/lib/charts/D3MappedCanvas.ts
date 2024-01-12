@@ -1,11 +1,12 @@
 import * as d3 from 'd3'
+import type { MappedData } from './types.js'
 
 /**
  * Базовый класс-канва для остальных графиков. Позволяет настроить поля, создать основные объекты.
  * @class
  */
 
-abstract class D3Canvas {
+export default abstract class D3MappedCanvas {
 
     #margin = { top: 10, right: 10, bottom: 10, left: 10 }
     #figure: HTMLElement
@@ -17,14 +18,9 @@ abstract class D3Canvas {
     /**
      * Конструктор для создания svg-пространства с полями. Обратите внимание, что высота указывается перед шириной, т.к. чаще может возникнуть потребность в ее изменении. Ширина по умолчанию 100% от родительского элемента, что приемлемо в большинстве случаев.
      * @param {HTMLElement} - html-контейнер, в который будет вписан график
-     * @param {string} - высота контейнера в единицах css; по умолчанию 480px.
-     * @param {string} - ширина контейнера в единицах css; по умолчанию 100%.
      */
-
-    constructor(figure: HTMLElement, height?: number, width?: number) {
+    constructor(figure: HTMLElement) {
         this.#figure = figure
-        figure.style.width = `${width}px` || '100%'
-        figure.style.height = `${height}px` || '480px'
     }
 
     /**
@@ -50,13 +46,6 @@ abstract class D3Canvas {
      * @param {number} - в пикселях.
      */ 
     set marginLeft(value: number)   { this.#margin.left   = value }
-
-    /**
-     * Сеттер для подписи к графику.
-     * @param {string} - подпись к графику, можно в формате html.
-     */ 
-    set caption(value: string) { d3.select(this.#figure).append("figcaption").html(value) }
-
 
     /**
      * Геттер для svg-пространства (без учета отступов).
@@ -112,40 +101,46 @@ abstract class D3Canvas {
      * @param {number} - ширина (вычислена заранее)
      * @param {number} - высота (вычислена заранее)
      */ 
-    abstract setupDomains(data: any[], width: number, height: number): void //{ throw 'Это абстрактный метод (setupDomains).'}
+    abstract setupDomains(data: MappedData, width: number, height: number): void 
+    //{ throw 'Это абстрактный метод (setupDomains).'}
 
     /**
-     * Здесь настраиваются оси графика. Абстрактный метод, следует перезагружать в классах-наследниках.
+     * Здесь настраиваются оси графика. Абстрактный метод, 
+     * следует перезагружать в классах-наследниках.
      * @param {object} - данные для графика;
      * @param {number} - ширина (вычислена заранее)
      * @param {number} - высота (вычислена заранее)
      */ 
-    abstract setupAxes(data: any[], width: number, height: number): void //{throw 'Это абстрактный метод (setupAxes).'}
+    abstract setupAxes(data: MappedData, width: number, height: number): void 
+    //{throw 'Это абстрактный метод (setupAxes).'}
 
     /**
-     * Рисование произвольных графиков. Абстрактный метод, следует перезагружать в классах-наследниках.
-     * @param {object} - набор библиотек d3;
+     * Рисование произвольных графиков. 
+     * Абстрактный метод, следует перезагружать в классах-наследниках.
      * @param {object} - базовый svg-объект, внутри которого рисуется всё остальное;
      * @param {number} - вычисленная ширина;
      * @param {number} - вычисленная высота;
      * @param {object} - данные для построения графика.
      */ 
-    abstract adjust(g: d3.Selection<SVGGElement, unknown, null, undefined>, width: number, height: number, data: any[]): void //{     throw 'Это абстрактный метод (adjust).'   }
+    abstract adjust(g: d3.Selection<SVGGElement, unknown, null, undefined>, 
+        width: number, height: number, data: MappedData): void 
 
     /**
-     * Преобразование данных в требуемый формат. Лучше делать это вне данного класса, но если очень нужно - можно переопределить этот метод.
+     * Преобразование данных в требуемый формат. Лучше делать это вне данного класса, 
+     * но если очень нужно - можно переопределить этот метод.
      * @param {string} - данные для отображения на графике.
      */ 
 
-    setupData(data: any[]){
+    setupData(data: MappedData){
         return data
     }
 
     /**
-     * Рисование графика. Метод не следует перезагружать, только вызывать после того, как выполнены все настройки.
+     * Рисование графика. Метод не следует перезагружать, только вызывать после того, 
+     * как выполнены все настройки.
      * @param {string} - данные для отображения на графике.
      */ 
-    draw(data: any[]){
+    draw(data: MappedData){
         const {g, width, height} = this.space
         data = this.setupData(data)
         this.setupDomains(data, width, height)
@@ -153,5 +148,3 @@ abstract class D3Canvas {
         this.adjust(g, width, height, data)
     }
 }
-
-export default D3Canvas

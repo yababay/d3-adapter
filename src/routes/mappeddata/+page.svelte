@@ -5,7 +5,7 @@
     onMount(() => {
         const chart = new D3MappedData(figure)
         const data = new Map ([
-            ["2024-01-06 03:48", {press_01: 21, temp_01: 89, color: "red"}],
+            ["2024-01-06 03:48", {measurements: {press: 21, temp: 89}, chart: {color: "red"}}],
             ["2024-01-06 04:48", {press_01: 7,  temp_01: 34, color: "green"}],
             ["2024-01-06 05:48", {press_01: 32, temp_01: 12, color: "yellow"}],
             ["2024-01-06 08:48", {press_01: 45, temp_01: 20, color: "black"}],

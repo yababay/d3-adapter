@@ -1,9 +1,9 @@
-<!--script lang="ts">
+<script lang="ts">
     import {onMount} from 'svelte'
-    import D3MappedData from '$lib/charts/D3MappedData.js';
+    import D3MappedShowSimple from '$lib/charts/D3MappedShowSimple.js';
     let figure: HTMLElement
     onMount(() => {
-        const chart = new D3MappedData (figure)
+        const chart = new D3MappedShowSimple(figure)
         const data = new Map ([
             ["2024-01-06 03:48", {measurements: {press: 21, temp: 89}, chart: {color: "red"}}],
             ["2024-01-06 04:48", {measurements: {press: 7, temp: 34}, chart: {color: "green"}}],
@@ -15,6 +15,12 @@
             ["2024-01-06 23:48", {measurements: {press: 15, temp: 33}, chart: {color: "cyan"}}],
         ])
         chart.draw(data)
+        setTimeout(() => {
+            const path = chart.pressPath
+            if(!path) throw 'no path'
+            path.style("stroke", "orange")
+            console.log("timeout")
+        }, 3000);
     })
 </script>
 
@@ -38,4 +44,4 @@
             //box-sizing: border-box;
         }
     }
-</style-->
+</style>

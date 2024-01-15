@@ -148,3 +148,4 @@ export default abstract class D3MappedCanvas {
         this.adjust(g, width, height, data)
     }
 }
+

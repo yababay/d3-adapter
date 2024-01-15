@@ -1,17 +1,30 @@
 import * as d3 from 'd3'
 import D3MappedCanvas from './D3MappedCanvas.js'
-import type { MappedData } from './types.js'
+import type { DateOrString, MappedData, Measurements } from './types.js'
 
 export default abstract class D3MappedData extends D3MappedCanvas {
 
     #x: d3.ScaleTime<number, number, never> | undefined
     #axisX = d3.axisBottom
+    #measurements: Measurements[] = []
+    #timestamps: DateOrString[] = []
+    
+    get x() {return this.#x} 
+    get measurements() {return this.#measurements} 
+    get timestamps() {return this.#timestamps.map(ts => new Date(ts))} 
 
     setupDomains(data: MappedData, width: number, height: number): void {
         const rangeX = d3.scaleTime().range([0, width])
-        const timestamps = Array.from(data.keys()).map(ts => new Date(ts)).sort()
-        const min = timestamps[0]
-        const max = timestamps.slice(-1)[0]
+        const timestamps = Array.from(data.keys()).sort()
+        this.#timestamps = timestamps
+        for(const ts of timestamps){
+            const value = data.get(ts)
+            if(!value) throw 'no value'
+            const{measurements} = value
+            this.#measurements.push(measurements)
+        }
+        const min = this.timestamps[0]
+        const max = this.timestamps.slice(-1)[0]
         this.#x = rangeX.domain([min, max])
 
         this.setupDomainY(data, width, height)

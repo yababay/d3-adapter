@@ -11,8 +11,8 @@ export default abstract class D3Canvas {
     #figure: HTMLElement
     #width: number
     #height: number
-    #data = new Map <Date, Measurements>()
-    #margin: Margin = { top: 10, right: 10, bottom: 10, left: 10 }
+    #data: Map <Date, Measurements>
+    #margin: Margin = { top: 10, right: 10, bottom: 20, left: 10 }
     #svg: d3.Selection<HTMLElement, unknown, null, undefined> | d3.Selection<SVGSVGElement, unknown, null, undefined>
     #graphics: d3.Selection<SVGGElement, unknown, null, undefined>
     
@@ -25,17 +25,12 @@ export default abstract class D3Canvas {
 
     constructor(figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions) {
         this.#figure = figure
-        for(const ts of data.keys()) {
-            const value = data.get(ts)
-            if(!value) throw 'no value'
-            const key = typeof ts === 'string' ? new Date(ts) : ts
-            this.#data.set(key, value)
-        }
         const figureWidth = figure.offsetWidth
         const figureHeight = figure.offsetHeight
-        this.#svg = d3.select(this.#figure).append("svg")
-            .attr("width", figureWidth)
-            .attr("height", figureHeight)
+        this.#data = new Map<Date, Measurements>(
+            Array.from(data.entries()).map(([key, value]) => [new Date(key), value])
+        )
+        this.#svg = d3.select(this.#figure).append("svg").attr("width", figureWidth).attr("height", figureHeight)
         if(options) {
             const {caption, margin} = options
             if(margin) this.#margin = margin
@@ -48,9 +43,6 @@ export default abstract class D3Canvas {
             .attr('width', this.#width)
             .attr('height', this.#height)
             .attr('transform', `translate(${left},${top})`) 
-        this.setupDomains()
-        this.setupAxes()
-        this.adjust()
     }
 
     get width() {return this.#width}
@@ -61,25 +53,9 @@ export default abstract class D3Canvas {
 
     subset(key: string):[number, number][] {
         return this.timestamps.map(ts => {
-            const measurements = this.#data
-            const value = Reflect.get(measurements, key)
-            if(typeof value !== 'number') throw 'no value'
-            return [ts.getTime(), value]
+            const value = this.#data.get(ts)
+            if(!value) throw 'no value in subset'
+            return [ts.getTime(), value[key]]
         })
     }
-
-    /**
-     * Здесь настраиваются домены по данным. Абстрактный метод, следует перезагружать в классах-наследниках.
-     */ 
-    abstract setupDomains(): void //{ throw 'Это абстрактный метод (setupDomains).'}
-
-    /**
-     * Здесь настраиваются оси графика. Абстрактный метод, следует перезагружать в классах-наследниках.
-     */ 
-    abstract setupAxes(): void //{throw 'Это абстрактный метод (setupAxes).'}
-
-    /**
-     * Рисование произвольных графиков. Абстрактный метод, следует перезагружать в классах-наследниках.
-     */ 
-    abstract adjust(): void
 }

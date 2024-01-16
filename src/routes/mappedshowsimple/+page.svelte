@@ -1,20 +1,20 @@
 <script lang="ts">
     import {onMount} from 'svelte'
-    import D3MappedShowSimple from '$lib/charts/D3MappedShowSimple.js';
+    import D3AxisY from '$lib/charts/D3AxisY.js';
     let figure: HTMLElement
     onMount(() => {
-        const chart = new D3MappedShowSimple(figure)
         const data = new Map ([
-            ["2024-01-06 03:48", {measurements: {press: 21, temp: 89}, chart: {color: "red"}}],
-            ["2024-01-06 04:48", {measurements: {press: 7, temp: 34}, chart: {color: "green"}}],
-            ["2024-01-06 05:48", {measurements: {press: 32, temp: 12}, chart: {color: "yellow"}}],
-            ["2024-01-06 08:48", {measurements: {press: 45, temp: 20}, chart: {color: "black"}}],
-            ["2024-01-06 12:48", {measurements: {press: 20, temp: 68}, chart: {color: "green"}}],
-            ["2024-01-06 17:48", {measurements: {press: 18, temp: 17}, chart: {color: "orange"}}],
-            ["2024-01-06 18:48", {measurements: {press: 9, temp: 22}, chart: {color: "pink"}}],
-            ["2024-01-06 23:48", {measurements: {press: 15, temp: 33}, chart: {color: "cyan"}}],
+            ["2024-01-06 03:48", {press: 21, temp: 89}],
+            ["2024-01-06 04:48", {press: 7, temp: 34}],
+            ["2024-01-06 05:48", {press: 32, temp: 12}],
+            ["2024-01-06 08:48", {press: 45, temp: 20}],
+            ["2024-01-06 12:48", {press: 20, temp: 68}],
+            ["2024-01-06 17:48", {press: 18, temp: 17}],
+            ["2024-01-06 18:48", {press: 9, temp: 22}],
+            ["2024-01-06 23:48", {press: 15, temp: 33}],
         ])
-        chart.draw(data)
+        //chart.draw(data)
+        const chart = new D3AxisY(figure, data)
         setTimeout(() => {
             const path = chart.pressPath
             if(!path) throw 'no path'

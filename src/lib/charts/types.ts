@@ -1,10 +1,10 @@
-type Chart = {color?: string, hidden?: boolean, 
-        path?: d3.Selection<SVGPathElement, unknown, null, undefined>}
-
 export type Measurements = {[key: string]: number}
+export type Timestamp = string | Date
+export type TimestampedMeasurements = Map<Timestamp, Measurements>
+export type Caption = {title: string, height: string}
+export type Margin = {top: number, right: number, bottom: number, left: number}
 
-export type ChartWithMeasurements = {chart: Chart, measurements: Measurements}
-
-export type DateOrString = string | Date
-
-export type MappedData = Map<DateOrString, ChartWithMeasurements>
+export type ChartOptions = {
+        caption?: Caption
+        margin?: Margin        
+}

@@ -12,11 +12,12 @@ export default class D3AxisY extends D3AxisX{
 
     get temperature() {return this.subset('temp')}
     get pressure() {return this.subset('press')}
+
     get pressPath() {
         if(this.#pressPath) return this.#pressPath
         const {x, pressure, graphics} = this
         const yPress = this.#yPress
-        if(!(x && yPress)) throw 'no x ypress'
+        if(!(yPress)) throw 'no x ypress'
         const valueLinePress = d3.line()
             .x(([ts]) => x(ts))
             .y(([_, v]) => yPress(v))
@@ -34,7 +35,7 @@ export default class D3AxisY extends D3AxisX{
         if(this.#tempPath) return this.#tempPath
         const {x, temperature, graphics} = this
         const yTemp = this.#yTemp
-        if(!(x && yTemp)) throw 'no x ytemp'
+        if(!(yTemp)) throw 'no x ytemp'
         const valueLineTemp = d3.line()
             .x(([ts]) => x(ts))
             .y(([_, v]) => yTemp(v))
@@ -70,6 +71,7 @@ export default class D3AxisY extends D3AxisX{
         this.#yTemp = rangeYTemp.domain([tempMin, tempMax])
         this.#yPress = rangeYPress.domain([pressMin, pressMax])
     }
+    
     setupAxisY(): void {
         if(!this.#yPress) throw 'no yPress'
         const axisYPress = d3.axisLeft
@@ -84,13 +86,12 @@ export default class D3AxisY extends D3AxisX{
         const yTemp = this.#yTemp
         g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(${width}, 0)`)
     }
-    adjust(): void {
-        const {pressPath, tempPath} = this
-
-        if(!(pressPath && tempPath)) throw 'not ready'
-    }
     
     constructor(figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions){
         super(figure, data, options)
+        this.setupDomainY()
+        this.setupDomainY()
+        const {pressPath, tempPath} = this
+        if(!(pressPath && tempPath)) throw 'not ready'
     }
 }

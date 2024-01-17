@@ -10,21 +10,25 @@ export default class D3AxisY extends D3AxisX{
     #pressPath: d3.Selection<SVGPathElement, unknown, null, undefined> | undefined
     #tempPath: d3.Selection<SVGPathElement, unknown, null, undefined> | undefined
 
+    set temperatureVisibility(yes: boolean){
+        this.tempPath.style("visibility", yes ? "visible":"hidden")
+    }
+
+    set pressureVisibility(yes: boolean){
+        this.pressPath.style("visibility", yes ? "visible":"hidden")
+    }
+
     get temperature() {return this.subset('temp')}
     get pressure() {return this.subset('press')}
-
+    
     get pressPath() {
         if(this.#pressPath) return this.#pressPath
         const {x, pressure, graphics} = this
         const yPress = this.#yPress
         if(!(yPress)) throw 'no x ypress'
-        const valueLinePress = d3.line()
-            .x(([ts]) => x(ts))
-            .y(([_, v]) => yPress(v))
-            .curve(d3.curveCardinal)
         this.#pressPath = graphics.append("path")
             .attr("class", "line")
-            .attr("d", valueLinePress(pressure))
+            .attr("d", this.valueLine(yPress, pressure))
             .style("fill", "none")
             .style("stroke", "steelblue")
             .style("stroke-width", "2px");
@@ -36,17 +40,22 @@ export default class D3AxisY extends D3AxisX{
         const {x, temperature, graphics} = this
         const yTemp = this.#yTemp
         if(!(yTemp)) throw 'no x ytemp'
-        const valueLineTemp = d3.line()
-            .x(([ts]) => x(ts))
-            .y(([_, v]) => yTemp(v))
-            .curve(d3.curveCardinal)
         this.#tempPath = graphics.append("path")
             .attr("class", "line")
-            .attr("d", valueLineTemp(temperature))
+            .attr("d", this.valueLine(yTemp,temperature))
             .style("fill", "none")
             .style("stroke", "red")
             .style("stroke-width", "2px");
         return this.#tempPath
+    }
+
+    valueLine(y: d3.ScaleLinear<number, number, never>, data: [number, number][]){
+        const {x} = this
+        const fn = d3.line()
+            .x(([ts]) => x(ts))
+            .y(([_, v]) => y(v))
+            .curve(d3.curveCardinal)
+            return fn(data)
     }
     
     setupDomainY(): void {
@@ -76,21 +85,19 @@ export default class D3AxisY extends D3AxisX{
         if(!this.#yPress) throw 'no yPress'
         const axisYPress = d3.axisLeft
         const yPress = this.#yPress
-        const g = this.graphics
-        g.append("g").call(axisYPress(yPress))
-
-        const {width} = this
+        const {width, graphics} = this
+        graphics.append("g").call(axisYPress(yPress))
 
         if(!this.#yTemp) throw 'no yTemp'
         const axisYTemp = d3.axisRight
         const yTemp = this.#yTemp
-        g.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(${width}, 0)`)
+        graphics.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(${width}, 0)`)
     }
     
     constructor(figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions){
         super(figure, data, options)
         this.setupDomainY()
-        this.setupDomainY()
+        this.setupAxisY()
         const {pressPath, tempPath} = this
         if(!(pressPath && tempPath)) throw 'not ready'
     }

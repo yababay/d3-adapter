@@ -1,7 +1,12 @@
 <script lang="ts">
     import {onMount} from 'svelte'
     import D3AxisY from '$lib/charts/D3AxisY.js';
+    import { writable } from 'svelte/store';
     let figure: HTMLElement
+
+    const pressureVisibility = writable(true)
+    const temperatureVisibility = writable(true)
+
     onMount(() => {
         const data = new Map ([
             ["2024-01-06 03:48", {press: 21, temp: 89}],
@@ -13,18 +18,40 @@
             ["2024-01-06 18:48", {press: 9, temp: 22}],
             ["2024-01-06 23:48", {press: 15, temp: 33}],
         ])
-        //chart.draw(data)
-        const chart = new D3AxisY(figure, data)
-        setTimeout(() => {
-            const path = chart.pressPath
-            if(!path) throw 'no path'
-            path.style("stroke", "orange")
-            console.log("timeout")
-        }, 3000);
+
+        const margin = {top: 10, right: 20, bottom: 40, left: 20}
+
+        const chart = new D3AxisY(figure, data, {margin})
+
+        pressureVisibility.subscribe($pressureVisibility => {
+            chart.pressureVisibility = $pressureVisibility
+        })
+
+        temperatureVisibility.subscribe($temperatureVisibility => {
+            chart.temperatureVisibility = $temperatureVisibility
+        })
     })
+
 </script>
 
 <main>
+    <fieldset class="mb-3">
+        <legend>Видимость: </legend>
+            <div class="form-check d-inline-block">
+                <input class="form-check-input" type="checkbox" value="" id="temperature"
+                    bind:checked={$temperatureVisibility}>
+                <label class="form-check-label" for="temperature">
+                  температура
+                </label>
+              </div> 
+            <div class="form-check d-inline-block">
+                <input class="form-check-input" type="checkbox" value="" id="pressure" 
+                    bind:checked={$pressureVisibility}>
+                <label class="form-check-label" for="pressure">
+                  давление
+                </label>
+            </div>              
+    </fieldset>
     <figure bind:this={figure}></figure>
 </main>
 
@@ -39,9 +66,7 @@
         figure{
             width: 1024px;
             height: 70%;
-            //border: 1px solid silver;
-            //padding: 2.5rem;
-            //box-sizing: border-box;
         }
+        fieldset{width: 1024px}
     }
 </style>

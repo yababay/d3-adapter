@@ -1,8 +1,9 @@
 <script lang="ts">
     import {onMount} from 'svelte'
-    import D3AxisY from '$lib/charts/D3AxisY.js';
+    import D3Dynamic from '$lib/charts/D3Dynamic.js';
     import { writable } from 'svelte/store';
-    let figure: HTMLElement
+
+    let figure: HTMLElement, addData: HTMLButtonElement
 
     const pressureVisibility = writable(true)
     const temperatureVisibility = writable(true)
@@ -12,16 +13,16 @@
             ["2024-01-06 03:48", {press: 21, temp: 89}],
             ["2024-01-06 04:48", {press: 7, temp: 34}],
             ["2024-01-06 05:48", {press: 32, temp: 12}],
-            ["2024-01-06 08:48", {press: 45, temp: 20}],
-            ["2024-01-06 12:48", {press: 20, temp: 68}],
-            ["2024-01-06 17:48", {press: 18, temp: 17}],
-            ["2024-01-06 18:48", {press: 9, temp: 22}],
-            ["2024-01-06 23:48", {press: 15, temp: 33}],
+            ["2024-01-06 06:48", {press: 45, temp: 20}],
+            ["2024-01-06 07:48", {press: 20, temp: 68}],
+            ["2024-01-06 08:48", {press: 18, temp: 17}],
+            ["2024-01-06 09:48", {press: 9, temp: 22}],
+            ["2024-01-06 10:48", {press: 15, temp: 33}],
         ])
 
         const margin = {top: 10, right: 20, bottom: 40, left: 20}
 
-        const chart = new D3AxisY(figure, data, {margin})
+        const chart = new D3Dynamic(figure, data, {margin})
 
         pressureVisibility.subscribe($pressureVisibility => {
             chart.pressureVisibility = $pressureVisibility
@@ -30,6 +31,8 @@
         temperatureVisibility.subscribe($temperatureVisibility => {
             chart.temperatureVisibility = $temperatureVisibility
         })
+
+        addData.addEventListener("click", e => chart.addData())
     })
 
 </script>
@@ -50,7 +53,8 @@
                 <label class="form-check-label" for="pressure">
                   давление
                 </label>
-            </div>              
+            </div>
+            <button class="btn btn-secondary" bind:this={addData}>add data</button>              
     </fieldset>
     <figure bind:this={figure}></figure>
 </main>

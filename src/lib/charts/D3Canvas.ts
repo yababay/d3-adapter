@@ -34,7 +34,6 @@ export default abstract class D3Canvas {
         if(options) {
             const {caption, margin} = options
             if(margin) this.#margin = margin
-            // TODO: use other options
         }
         const { top, right, bottom, left } = this.#margin;
         this.#width = figureHeight - left - right
@@ -45,11 +44,13 @@ export default abstract class D3Canvas {
             .attr('transform', `translate(${left},${top})`) 
     }
 
+    get data() {return this.#data}
     get width() {return this.#width}
     get height() {return this.#height}
     get margin() {return this.#margin}
     get graphics() {return this.#graphics}
-    get timestamps() {return Array.from(this.#data.keys()).sort((a: Date, b: Date) => a.getTime() - b.getTime() )}
+    get timestamps() {return Array.from(this.#data.keys()).sort((a: Date, b: Date) => 
+        a.getTime() - b.getTime() )}
 
     subset(key: string):[number, number][] {
         return this.timestamps.map(ts => {

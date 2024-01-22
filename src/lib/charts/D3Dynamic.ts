@@ -8,9 +8,16 @@ export default class D3Dynamic extends D3AxisY{
         const last = this.timestamps.slice(-1)[0]
         const first = this.timestamps[0]
         const ts = new Date(last.getTime() + 3600000)
-        this.data.set(ts, {"temp": 85 * Math.random(), "press": 45 * Math.random()})
+        this.data.set(ts, {"temp": 60 + 25 * Math.random(), "press": 15 + 25 * Math.random()})
         this.data.delete(first)
-        console.log(this.timestamps)
+        const {tempPath, yTemp, temperature, pressPath, yPress, pressure} = this
+        if(!yTemp) throw 'ok-noyt'
+        tempPath.attr("d", this.valueLine(yTemp,temperature))
+        if(!yPress) throw 'ok-noyp'
+        pressPath.attr("d", this.valueLine(yPress,pressure))
+        this.drawAxisX()
+        this.setupDomainY()
+        this.setupAxisY()
     }
     
     constructor(figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions){

@@ -4,6 +4,9 @@ import * as d3 from 'd3'
 
 export default class D3AxisY extends D3AxisX{
 
+    #lineYp: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
+    #lineYt: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
+
     #yPress: d3.ScaleLinear<number, number, never> | undefined
     #yTemp: d3.ScaleLinear<number, number, never> | undefined
 
@@ -20,6 +23,8 @@ export default class D3AxisY extends D3AxisX{
 
     get temperature() {return this.subset('temp')}
     get pressure() {return this.subset('press')}
+    get yTemp(){return this.#yTemp}
+    get yPress(){return this.#yPress}
     
     get pressPath() {
         if(this.#pressPath) return this.#pressPath
@@ -38,7 +43,7 @@ export default class D3AxisY extends D3AxisX{
     get tempPath() {
         if(this.#tempPath) return this.#tempPath
         const {x, temperature, graphics} = this
-        const yTemp = this.#yTemp
+        const {yTemp} = this
         if(!(yTemp)) throw 'no x ytemp'
         this.#tempPath = graphics.append("path")
             .attr("class", "line")
@@ -86,12 +91,15 @@ export default class D3AxisY extends D3AxisX{
         const axisYPress = d3.axisLeft
         const yPress = this.#yPress
         const {width, graphics} = this
-        graphics.append("g").call(axisYPress(yPress))
+        if(this.#lineYp) this.#lineYp.remove()
+        this.#lineYp = graphics.append("g").call(axisYPress(yPress))
 
         if(!this.#yTemp) throw 'no yTemp'
         const axisYTemp = d3.axisRight
         const yTemp = this.#yTemp
-        graphics.append("g").call(axisYTemp(yTemp)).attr("transform", `translate(${width}, 0)`)
+        if(this.#lineYt) this.#lineYt.remove()
+        this.#lineYt = graphics.append("g")
+            .call(axisYTemp(yTemp)).attr("transform", `translate(${width}, 0)`)
     }
     
     constructor(figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions){

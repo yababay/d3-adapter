@@ -2,12 +2,8 @@
     <div class="col-3">
         <ul>
             <li><a href="/">на главную</a></li>
-            <!--li><a href="/simple-line">линейный график</a></li>
-            <li><a href="/simple-with-dates">график с датами</a></li>
-            <li><a href="/multiline">график c линиями</a></li>
-            <li><a href="/multiscale">график c 2 шкалами</a></li>
-            <li><a href="/mappeddata">данные в формате Map</a></li-->
-            <li><a href="/mappedshowsimple">простой график</a></li>
+            <li><a href="/dynamic">простой график</a></li>
+            <li><a href="/proxy">proxy</a></li>
         </ul>
     </div>
     <div class="col-9">

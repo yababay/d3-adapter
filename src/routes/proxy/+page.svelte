@@ -1,6 +1,6 @@
 <script lang="ts">
     import {onMount} from 'svelte'
-    import D3Dynamic from '$lib/charts/D3Dynamic.js';
+    import d3Proxy from '$lib/charts/D3Proxy.js';
     import { writable } from 'svelte/store';
 
     let figure: HTMLElement, addData: HTMLButtonElement
@@ -10,19 +10,19 @@
 
     onMount(() => {
         const data = new Map ([
-            ["2024-01-06 03:48", {press: 21, temp: 89}],
-            ["2024-01-06 04:48", {press: 7, temp: 34}],
-            ["2024-01-06 05:48", {press: 32, temp: 12}],
-            ["2024-01-06 06:48", {press: 45, temp: 20}],
-            ["2024-01-06 07:48", {press: 20, temp: 68}],
-            ["2024-01-06 08:48", {press: 18, temp: 17}],
-            ["2024-01-06 09:48", {press: 9, temp: 22}],
-            ["2024-01-06 10:48", {press: 15, temp: 33}],
+            ["2024-01-06 03:48", {press_01: 21, press_02: 51, temp_01: 12, temp_02: 80}],
+            ["2024-01-06 04:48", {press_01: 56, press_02: 48, temp_01: 44, temp_02: 49}],
+            ["2024-01-06 05:48", {press_01: 33, press_02: 36, temp_01: 25, temp_02: 22}],
+            ["2024-01-06 06:48", {press_01: 52, press_02: 24, temp_01: 13, temp_02: 17}],
+            ["2024-01-06 07:48", {press_01: 12, press_02: 13, temp_01: 47, temp_02: 45}],
+            ["2024-01-06 08:48", {press_01: 56, press_02: 75, temp_01: 89, temp_02: 33}],
+            ["2024-01-06 09:48", {press_01: 88, press_02: 56, temp_01: 98, temp_02: 22}],
+            ["2024-01-06 10:48", {press_01: 21, press_02: 56, temp_01: 70, temp_02: 11}],
         ])
 
-        const margin = {top: 10, right: 20, bottom: 40, left: 20}
+        const margin = {top: 10, right: 20, bottom: 40, left: 30}
 
-        const chart = new D3Dynamic(figure, data, {margin})
+        const chart = d3Proxy(figure, data, {margin})
 
         pressureVisibility.subscribe($pressureVisibility => {
             chart.pressureVisibility = $pressureVisibility
@@ -32,7 +32,8 @@
             chart.temperatureVisibility = $temperatureVisibility
         })
 
-        addData.addEventListener("click", e => chart.addData())
+        //addData.addEventListener("click", e => chart.addData())
+        addData.addEventListener("click", e => console.log(chart.druck_01))
     })
 
 </script>

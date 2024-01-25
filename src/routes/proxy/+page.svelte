@@ -25,15 +25,15 @@
         const chart = d3Proxy(figure, data, {margin})
 
         pressureVisibility.subscribe($pressureVisibility => {
-            chart.pressureVisibility = $pressureVisibility
+            chart.press_01_visibility = $pressureVisibility
         })
 
         temperatureVisibility.subscribe($temperatureVisibility => {
-            chart.temperatureVisibility = $temperatureVisibility
+            chart.temp_01_visibility = $temperatureVisibility
         })
 
         //addData.addEventListener("click", e => chart.addData())
-        addData.addEventListener("click", e => console.log(chart.druck_01))
+        addData.addEventListener("click", e => chart.press_01_visibility = true)
     })
 
 </script>

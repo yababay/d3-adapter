@@ -3,17 +3,58 @@ import type { ChartOptions, Druckable, TimestampedMeasurements } from "./types.j
 import * as d3 from 'd3'
 
 const DELTA = .1
-//const BOTTOM_DELTA = .1
 
 const withDelta = (min: number, max: number) => {
     const delta = (max - min) * DELTA
     return [min - delta, max + delta]
 }
 
+const getColor = (temp: boolean = true) => {
+    const hexCharacters = [0,1,2,3,4,5,6,7,8,9,"A","B","C","D","E","F"]
+
+    let hexColorRep = ""
+
+    for (let position = 0; position < 4; position++){
+        const randomPosition = Math.floor ( Math.random() * hexCharacters.length )
+        hexColorRep += hexCharacters[position]
+    }
+  
+    return temp ? `#FF${hexColorRep}` : `#${hexColorRep}FF`
+}
+
 class D3WithProxy extends D3AxisX {
 
     #axisPress: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
     #axisTemp: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
+    #pathes = new Map<string, d3.Selection<SVGPathElement, unknown, null, undefined>>()
+
+    drawPath(param: string, visibility: boolean = true): 
+        d3.Selection<SVGPathElement, unknown, null, undefined>{
+        let path = this.#pathes.get(param)
+        const {yPress, yTemp} = this.setupDomainY()
+        if(path){
+            const data = this.subset(param)
+            path.attr("d", this.valueLine(param.startsWith("temp_") ? yTemp : yPress, data))
+            path.style("visibility", visibility ? "visible":"hidden")
+            return path
+        }
+        path = this.graphics.append("path")
+            .attr("class", "line")
+            .style("fill", "none")
+            .style("stroke", getColor(param.startsWith("temp_")))
+            .style("stroke-width", "2px"); 
+        this.#pathes.set(param, path)
+        return this.drawPath(param)
+    }
+
+    valueLine(y: d3.ScaleLinear<number, number, never>, data: [number, number][]){
+        const {x} = this
+        const fn = d3.line()
+            .x(([ts]) => x(ts))
+            .y(([_, v]) => y(v))
+            .curve(d3.curveCardinal)
+            return fn(data)
+    }
 
     get limits(): [number, number, number, number] {
         const {data} = this
@@ -72,8 +113,13 @@ export default (figure: HTMLElement, data: TimestampedMeasurements, options?: Ch
             return 'hallo'
         },*/
         set: function (target: Druckable, name: string, value: boolean) {
-            //if(name === 'pressureVisibility') chart.pressureVisibility = value
-            //if(name === 'temperatureVisibility') chart.temperatureVisibility = value
+            if(!(name.endsWith("_visibility") && 
+                (name.startsWith("temp_") || name.startsWith("press_"))
+            )) return true
+            
+            const [_, param] = /(.*)_visibility/.exec(name) || []
+            if(typeof param !== "string") return true
+            const path = chart.drawPath(param, value)
             return true
         }
     })

@@ -1,6 +1,7 @@
 import D3AxisX from "./D3AxisX.js";
-import type { ChartOptions, Druckable, TimestampedMeasurements } from "./types.js";
+import type { ChartOptions, Druckable, Measurements, TimestampedMeasurements } from "./types.js";
 import * as d3 from 'd3'
+import { getRed, getBlue } from "$lib/colors.js";
 
 const DELTA = .1
 
@@ -28,6 +29,25 @@ class D3WithProxy extends D3AxisX {
     #axisTemp: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
     #pathes = new Map<string, d3.Selection<SVGPathElement, unknown, null, undefined>>()
 
+    addData(ts: Date, params: Measurements){
+        /*const last = this.timestamps.slice(-1)[0]
+        const first = this.timestamps[0]
+        const ts = new Date(last.getTime() + 3600000)*/
+        this.data.set(ts, params)
+        /*this.data.delete(first)
+        const {tempPath, yTemp, temperature, pressPath, yPress, pressure} = this
+        if(!yTemp) throw 'ok-noyt'
+        tempPath.attr("d", this.valueLine(yTemp,temperature))
+        if(!yPress) throw 'ok-noyp'
+        pressPath.attr("d", this.valueLine(yPress,pressure))
+        this.drawAxisX()
+        this.setupDomainY()
+        this.setupAxisY()*/
+        this.setupDomainY()
+        this.setupAxisY()
+        this.params.forEach(param => this.drawPath(param))
+    }
+
     drawPath(param: string, visibility: boolean = true): 
         d3.Selection<SVGPathElement, unknown, null, undefined>{
         let path = this.#pathes.get(param)
@@ -41,7 +61,7 @@ class D3WithProxy extends D3AxisX {
         path = this.graphics.append("path")
             .attr("class", "line")
             .style("fill", "none")
-            .style("stroke", getColor(param.startsWith("temp_")))
+            .style("stroke", param.startsWith("temp_") ? getRed() : getBlue())
             .style("stroke-width", "2px"); 
         this.#pathes.set(param, path)
         return this.drawPath(param)
@@ -54,6 +74,17 @@ class D3WithProxy extends D3AxisX {
             .y(([_, v]) => y(v))
             .curve(d3.curveCardinal)
             return fn(data)
+    }
+
+    get params(){
+        const params =  Array.from(this.data.values()).reduce((acc, el) => {
+            const keys = Reflect.ownKeys(el)
+            for (const key of keys){
+                if (typeof key === "string") acc.add(key)
+            }
+            return acc
+        }, new Set<string>())
+        return [...params].sort()
     }
 
     get limits(): [number, number, number, number] {
@@ -106,12 +137,12 @@ class D3WithProxy extends D3AxisX {
 export default (figure: HTMLElement, data: TimestampedMeasurements, options?: ChartOptions) => {
     let chart = new D3WithProxy(figure, data, options)
     return new Proxy({}, {
-        /*get: function (target: Druckable, name: string) {
-            if(name === 'pressureVisibility') return chart.pressureVisi
-            if(name === 'temperatureVisibility') return chart.temperatureVisibility
-            if(name.startsWith('druck')) return chart.pressure
+        get: function (target: Druckable, name: string) {
+            //if(name === 'pressureVisibility') return chart.pressureVisi
+            //if(name === 'temperatureVisibility') return chart.temperatureVisibility
+            if(name === "params") return chart.params
             return 'hallo'
-        },*/
+        },
         set: function (target: Druckable, name: string, value: boolean) {
             if(!(name.endsWith("_visibility") && 
                 (name.startsWith("temp_") || name.startsWith("press_"))

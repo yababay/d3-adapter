@@ -2,11 +2,15 @@
     import {onMount} from 'svelte'
     import d3Proxy from '$lib/charts/D3Proxy.js';
     import { writable } from 'svelte/store';
+    import ParamCheckbox from '$lib/components/ParamCheckbox.svelte';
+    import type { Druckable } from '$lib/charts/types.js';
 
     let figure: HTMLElement, addData: HTMLButtonElement
 
-    const pressureVisibility = writable(true)
-    const temperatureVisibility = writable(true)
+    //const pressureVisibility = writable(true)
+    //const temperatureVisibility = writable(true)
+    const checkboxes = writable<string[]>(new Array<string>())
+    let chart: Druckable | undefined
 
     onMount(() => {
         const data = new Map ([
@@ -22,18 +26,23 @@
 
         const margin = {top: 10, right: 20, bottom: 40, left: 30}
 
-        const chart = d3Proxy(figure, data, {margin})
+        chart = d3Proxy(figure, data, {margin})
+        const {params} = chart
+        //const array = Array.from(params || [])
+        if(!Array.isArray(params)) throw "bad params"
+        $checkboxes = params
 
-        pressureVisibility.subscribe($pressureVisibility => {
+        /*pressureVisibility.subscribe($pressureVisibility => {
             chart.press_01_visibility = $pressureVisibility
         })
 
         temperatureVisibility.subscribe($temperatureVisibility => {
             chart.temp_01_visibility = $temperatureVisibility
-        })
+        })*/
 
         //addData.addEventListener("click", e => chart.addData())
-        addData.addEventListener("click", e => chart.press_01_visibility = true)
+
+        //addData.addEventListener("click", e => chart.press_01_visibility = true)
     })
 
 </script>
@@ -41,7 +50,10 @@
 <main>
     <fieldset class="mb-3">
         <legend>Видимость: </legend>
-            <div class="form-check d-inline-block">
+        {#each $checkboxes as param}
+            <ParamCheckbox {param} {chart} />
+        {/each}
+            <!--div class="form-check d-inline-block">
                 <input class="form-check-input" type="checkbox" value="" id="temperature"
                     bind:checked={$temperatureVisibility}>
                 <label class="form-check-label" for="temperature">
@@ -54,7 +66,7 @@
                 <label class="form-check-label" for="pressure">
                   давление
                 </label>
-            </div>
+            </div-->
             <button class="btn btn-secondary" bind:this={addData}>add data</button>              
     </fieldset>
     <figure bind:this={figure}></figure>

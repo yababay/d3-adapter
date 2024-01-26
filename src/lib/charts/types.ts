@@ -9,4 +9,4 @@ export type ChartOptions = {
         margin?: Margin        
 }
 
-export type Druckable = {[key: string]: string | number | boolean | [number, number][]}
+export type Druckable = {[key: string]: string | number | boolean | string[]}

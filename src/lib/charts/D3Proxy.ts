@@ -1,5 +1,5 @@
 import D3AxisX from "./D3AxisX.js";
-import type { ChartOptions, Druckable, Measurements, TimestampedMeasurements } from "./types.js";
+import type { ChartOptions, DataToAdd, Druckable, Measurements, TimestampedMeasurements } from "./types.js";
 import * as d3 from 'd3'
 import { getRed, getBlue } from "$lib/colors.js";
 
@@ -29,20 +29,9 @@ class D3WithProxy extends D3AxisX {
     #axisTemp: d3.Selection<SVGGElement, unknown, null, undefined> | undefined
     #pathes = new Map<string, d3.Selection<SVGPathElement, unknown, null, undefined>>()
 
-    addData(ts: Date, params: Measurements){
-        /*const last = this.timestamps.slice(-1)[0]
-        const first = this.timestamps[0]
-        const ts = new Date(last.getTime() + 3600000)*/
-        this.data.set(ts, params)
-        /*this.data.delete(first)
-        const {tempPath, yTemp, temperature, pressPath, yPress, pressure} = this
-        if(!yTemp) throw 'ok-noyt'
-        tempPath.attr("d", this.valueLine(yTemp,temperature))
-        if(!yPress) throw 'ok-noyp'
-        pressPath.attr("d", this.valueLine(yPress,pressure))
-        this.drawAxisX()
-        this.setupDomainY()
-        this.setupAxisY()*/
+    addData(ts: Date, measurements: Measurements){
+        this.data.delete(this.timestamps[0])
+        this.data.set(ts, measurements)
         this.setupDomainY()
         this.setupAxisY()
         this.params.forEach(param => this.drawPath(param))
@@ -141,15 +130,21 @@ export default (figure: HTMLElement, data: TimestampedMeasurements, options?: Ch
             //if(name === 'pressureVisibility') return chart.pressureVisi
             //if(name === 'temperatureVisibility') return chart.temperatureVisibility
             if(name === "params") return chart.params
+            if(name === "last_timestamp") return chart.timestamps.slice(-1)[0]
             return 'hallo'
         },
-        set: function (target: Druckable, name: string, value: boolean) {
+        set: function (target: Druckable, name: string, value: boolean | DataToAdd) {
+            if(name === "update"){
+                if(typeof value === "boolean") return true
+                const{ts, measurements} = value
+                chart.addData(ts, measurements)
+            }
             if(!(name.endsWith("_visibility") && 
                 (name.startsWith("temp_") || name.startsWith("press_"))
             )) return true
             
             const [_, param] = /(.*)_visibility/.exec(name) || []
-            if(typeof param !== "string") return true
+            if(typeof param !== "string" || typeof value !== "boolean") return true //throw 'bad draw'
             const path = chart.drawPath(param, value)
             return true
         }

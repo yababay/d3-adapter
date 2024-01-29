@@ -40,9 +40,19 @@
             chart.temp_01_visibility = $temperatureVisibility
         })*/
 
-        //addData.addEventListener("click", e => chart.addData())
+        const update = () => {
+            if(!chart) return 
+            const last = chart.last_timestamp
+            if(!(last instanceof Date)) return
+            const ts = new Date(last.getTime() + 3600000)
+            const measurements = {press_01: 21, press_02: 51, temp_01: 12, temp_02: 80}
+            chart.update = {ts, measurements}
+        }
 
-        //addData.addEventListener("click", e => chart.press_01_visibility = true)
+        addData.addEventListener("click", update) 
+
+        setInterval(update, 5000)
+
     })
 
 </script>
